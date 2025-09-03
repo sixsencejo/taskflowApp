@@ -15,7 +15,7 @@ public class UserResponse {
     private String email;
     private String name;
     private String role;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     public static UserResponse from(User user) {
         return new UserResponse(
