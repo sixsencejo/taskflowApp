@@ -1,4 +1,4 @@
-package org.example.taskflow.common.config;
+package org.example.taskflow.common.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
