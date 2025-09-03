@@ -20,9 +20,9 @@ public class Task extends SoftDeletableEntity {
 
     private String title;
     private String description;
+    private LocalDateTime dueDate;
     private Priority priority;
     private Status status;
     // 활동 유형
     private Category category;
-    private LocalDateTime deadline;
 }
