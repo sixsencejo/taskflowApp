@@ -1,6 +1,6 @@
 package org.example.taskflow.domain.task.enums;
 
-public enum Description {
+public enum Category {
 
     TASK_CREATED,
     TASK_UPDATED,
