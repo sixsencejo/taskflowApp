@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
     // 사용자 관련 에러
     USERNAME_ALREADY_EXISTS(400, "이미 존재하는 사용자명입니다"),
+    EMAIL_ALREADY_EXISTS(400, "이미 존재하는 이메일입니다"),
     INVALID_CREDENTIALS(401, "잘못된 사용자명 또는 비밀번호입니다"),
     AUTHENTICATION_REQUIRED(401, "인증이 필요합니다"),
     PASSWORD_MISMATCH(400, "비밀번호가 일치하지 않습니다"),
@@ -17,7 +18,7 @@ public enum ErrorCode {
     TEAM_NAME_ALREADY_EXISTS(400, "팀 이름이 이미 존재합니다"),
     TEAM_NOT_FOUND(404, "팀을 찾을 수 없습니다"),
     USER_NOT_TEAM_MEMBER(400, "사용자가 팀 멤버가 아닙니다"),
-    USER_ALREADY_TEAM_MEMBER(400,"사용자가 이미 팀 멤버입니다"),
+    USER_ALREADY_TEAM_MEMBER(400, "사용자가 이미 팀 멤버입니다"),
 
     // 태스크 관련 에러
     TASK_NOT_FOUND(404, "해당 ID의 작업을 찾을 수 없습니다"),
