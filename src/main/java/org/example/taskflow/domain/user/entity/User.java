@@ -22,7 +22,7 @@ public class User extends SoftDeletableEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.USER;
 
     @Builder
     public User(String username, String email, String password, String name, UserRole role) {
