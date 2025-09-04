@@ -8,6 +8,7 @@ public record TaskCreateRequest(
         String title,
         String description,
         LocalDateTime dueDate,
-        Priority priority
+        Priority priority,
+        Long assigneeId
 ) {
 }

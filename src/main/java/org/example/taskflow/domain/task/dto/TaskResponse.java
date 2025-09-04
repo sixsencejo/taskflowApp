@@ -12,16 +12,7 @@ public record TaskResponse(
         LocalDateTime dueDate,
         Priority priority,
         Status status,
-        /*
-        TODO: 추가할 것 UserDto
-            "assignee": {
-                "id": 1,
-                "username": "johndoe",
-                "name": "John Doe",
-                "email": "john@example.com"
-            }
-         */
-        AssigneeResponse assignee,
+        Assignee assignee,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
