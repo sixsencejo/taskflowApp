@@ -23,7 +23,7 @@ public class User extends SoftDeletableEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
