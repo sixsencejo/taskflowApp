@@ -1,5 +1,6 @@
 package org.example.taskflow.domain.task.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.common.utils.ResponseUtil;
@@ -17,7 +18,8 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public CommonResponse<TaskResponse> createTask(TaskCreateRequest taskCreateRequest) {
+    public CommonResponse<TaskResponse> createTask(
+            @Valid @RequestBody TaskCreateRequest taskCreateRequest) {
         TaskResponse taskResponse = taskService.createTask(taskCreateRequest);
 
         return ResponseUtil.success(taskResponse, ResponseCode.TASK_CREATED.getMessage());
@@ -51,7 +53,9 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-    public CommonResponse<TaskResponse> getTask(@PathVariable Long taskId) {
+    public CommonResponse<TaskResponse> getTask(
+            @PathVariable Long taskId
+    ) {
         TaskResponse taskResponse = taskService.getTask(taskId);
         return ResponseUtil.success(taskResponse, ResponseCode.TASK_FIND.getMessage());
     }
@@ -59,7 +63,7 @@ public class TaskController {
     @PutMapping("/{taskId}")
     public CommonResponse<TaskResponse> updateTask(
             @PathVariable Long taskId,
-            @RequestBody TaskUpdateAllRequest taskUpdateAllRequest
+            @Valid @RequestBody TaskUpdateAllRequest taskUpdateAllRequest
     ) {
         TaskResponse taskResponse = taskService.updateTask(taskId, taskUpdateAllRequest);
         return ResponseUtil.success(taskResponse, ResponseCode.TASK_UPDATED.getMessage());

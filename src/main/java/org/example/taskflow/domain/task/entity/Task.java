@@ -1,6 +1,9 @@
 package org.example.taskflow.domain.task.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +22,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Task extends SoftDeletableEntity {
 
+    @NotEmpty
+    @Size(max = 100)
     private String title;
+    @NotEmpty
     private String description;
+    @FutureOrPresent
     private LocalDateTime dueDate;
     @Enumerated(EnumType.STRING)
     private Priority priority;      // 우선 순위
