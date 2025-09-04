@@ -125,6 +125,31 @@ public class TaskService {
         );
     }
 
+    // 자신의 Task 목록 전체 조회
+    @Transactional(readOnly = true)
+    public TaskPageResponse<TaskResponse> getTaskAll(Long userId, int page, int size) {
+        User assignee = userRepository.getReferenceById(userId);
+
+        Page<Task> tasks = taskRepository.findByAssignee(
+                assignee,
+                PageRequest.of(
+                        page,
+                        size,
+                        Sort.by(Sort.Direction.DESC, "dueDate")
+                )
+        );
+
+        List<TaskResponse> taskResponseList = getTaskResponse(tasks);
+
+        return new TaskPageResponse<>(
+                taskResponseList,
+                tasks.getTotalElements(),
+                tasks.getTotalPages(),
+                tasks.getSize(),
+                tasks.getNumber()
+        );
+    }
+
     // Task 단건 조회
     @Transactional(readOnly = true)
     public TaskResponse getTask(Long taskId) {
@@ -174,7 +199,7 @@ public class TaskService {
     }
 
     // Task 삭제
-    public void deleteTask(Long taskId) {
+    public Void deleteTask(Long taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
