@@ -34,5 +34,5 @@ public interface DashboardServiceImpl {
      * @param userId
      * return 활동내역 페이지 응답
      */
-    PageResponse<ActivityDto> getActivityDtos(Long userId, Pageable pageable);
+    PageResponse<ActivityDto> getActivityDto(Long userId, Pageable pageable);
 }
