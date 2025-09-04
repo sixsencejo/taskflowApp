@@ -1,6 +1,7 @@
 package org.example.taskflow.domain.user.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,28 +15,28 @@ import org.example.taskflow.domain.user.enums.UserRole;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends SoftDeletableEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    @Column(nullable = false, unique = true, length = 20)
     private String username;
+
+    @Column(nullable = false, unique = true, length = 50)
+    @Email(message = "유효한 이메일 주소를 입력해주세요.")
     private String email;
+
+    @Column(nullable = false, length = 20)
     private String name;
+
+    @Column(nullable = false, length = 150)
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
     private UserRole role = UserRole.USER;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", columnDefinition = "logtext")
+    @JoinColumn(name = "team_id")
     private Team team;
 
-    public static User fromTeam(Long teamId) {
-        return new User(teamId);
-    }
-
-    private User(Long id) {
-        this.id = id;
-    }
 
     @Builder
     public User(String username, String email, String password, String name, UserRole role) {
