@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.task.dto.*;
+import org.example.taskflow.domain.task.enums.ResponseCode;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.task.service.TaskService;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class TaskController {
     public CommonResponse<TaskResponse> createTask(TaskCreateRequest taskCreateRequest) {
         TaskResponse taskResponse = taskService.createTask(taskCreateRequest);
 
-        return ResponseUtil.success(taskResponse, "Task가 생성되었습니다.");
+        return ResponseUtil.success(taskResponse, ResponseCode.TASK_CREATED.getMessage());
     }
 
     @GetMapping
@@ -35,24 +36,24 @@ public class TaskController {
 
         if (status != null) {
             taskResponses = taskService.getTaskAllByStatus(status, page, size);
-            return ResponseUtil.success(taskResponses, "Task 목록을 조회했습니다.");
+            return ResponseUtil.success(taskResponses, ResponseCode.TASK_FINDS.getMessage());
         }
         if (search != null) {
             taskResponses = taskService.getTaskAlBySearch(search, page, size);
-            return ResponseUtil.success(taskResponses, "Task 목록을 조회했습니다.");
+            return ResponseUtil.success(taskResponses, ResponseCode.TASK_FINDS.getMessage());
         }
         if (assigneeId != null) {
             taskResponses = taskService.getTaskAllByAssigneeId(assigneeId, page, size);
-            return ResponseUtil.success(taskResponses, "Task 목록을 조회했습니다.");
+            return ResponseUtil.success(taskResponses, ResponseCode.TASK_FINDS.getMessage());
         }
         taskResponses = taskService.getTaskAll(userId, page, size);
-        return ResponseUtil.success(taskResponses, "Task 목록을 조회했습니다.");
+        return ResponseUtil.success(taskResponses, ResponseCode.TASK_FINDS.getMessage());
     }
 
     @GetMapping("/{taskId}")
     public CommonResponse<TaskResponse> getTask(@PathVariable Long taskId) {
         TaskResponse taskResponse = taskService.getTask(taskId);
-        return ResponseUtil.success(taskResponse, "Task를 조회했습니다.");
+        return ResponseUtil.success(taskResponse, ResponseCode.TASK_FIND.getMessage());
     }
 
     @PutMapping("/{taskId}")
@@ -61,7 +62,7 @@ public class TaskController {
             @RequestBody TaskUpdateAllRequest taskUpdateAllRequest
     ) {
         TaskResponse taskResponse = taskService.updateTask(taskId, taskUpdateAllRequest);
-        return ResponseUtil.success(taskResponse, "Task가 수정되었습니다.");
+        return ResponseUtil.success(taskResponse, ResponseCode.TASK_UPDATED.getMessage());
     }
 
     @PatchMapping("/{taskId}/status")
@@ -71,11 +72,11 @@ public class TaskController {
     ) {
 
         TaskResponse taskResponse = taskService.updateStatus(taskId, taskUpdateStatusRequest);
-        return ResponseUtil.success(taskResponse, "작업 상태가 업데이트되었습니다.");
+        return ResponseUtil.success(taskResponse, ResponseCode.TASK_STATUS_UPDATED.getMessage());
     }
 
     @DeleteMapping("/{taskId}")
     public CommonResponse<Void> deleteTask(@PathVariable Long taskId) {
-        return ResponseUtil.success(taskService.deleteTask(taskId), "Task가 삭제되었습니다.");
+        return ResponseUtil.success(taskService.deleteTask(taskId), ResponseCode.TASK_DELETED.getMessage());
     }
 }
