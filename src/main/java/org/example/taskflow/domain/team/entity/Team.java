@@ -13,23 +13,12 @@ import org.example.taskflow.domain.user.entity.User;
 @AllArgsConstructor
 @Table(name = "team")
 public class Team extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private String name;
 
     @Column(nullable = false, unique = true)
     private Long teamId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
-    private User user;
-
     private String explain;
 
-
-    public void Team(Long teamId) {
-        this.teamId = teamId;
-    }
 }

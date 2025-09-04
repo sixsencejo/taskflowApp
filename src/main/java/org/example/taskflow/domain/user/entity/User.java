@@ -24,7 +24,7 @@ public class User extends SoftDeletableEntity {
     private UserRole role;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id")
     private Team team;
 
 
