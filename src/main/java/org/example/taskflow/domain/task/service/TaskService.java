@@ -52,7 +52,7 @@ public class TaskService {
     // status 시
     @Transactional(readOnly = true)
     public TaskPageResponse<TaskResponse> getTaskAllByStatus(Status status, int page, int size) {
-        Page<Task> tasks = taskRepository.findByStatus(
+        Page<Task> tasks = taskRepository.findByStatusAndDeletedAtIsNull(
                 status,
                 PageRequest.of(
                         page,
@@ -76,7 +76,7 @@ public class TaskService {
     // search 시
     @Transactional(readOnly = true)
     public TaskPageResponse<TaskResponse> getTaskAlBySearch(String search, int page, int size) {
-        Page<Task> tasks = taskRepository.findByTitleContainingIgnoreCase(
+        Page<Task> tasks = taskRepository.findByTitleContainingIgnoreCaseAndDeletedAtIsNull(
                 search,
                 PageRequest.of(
                         page,
@@ -104,7 +104,7 @@ public class TaskService {
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
-        Page<Task> tasks = taskRepository.findByAssignee(
+        Page<Task> tasks = taskRepository.findByAssigneeAndDeletedAtIsNull(
                 assignee,
                 PageRequest.of(
                         page,
@@ -127,7 +127,7 @@ public class TaskService {
     // Task 목록 전체 조회
     @Transactional(readOnly = true)
     public TaskPageResponse<TaskResponse> getTaskAll(int page, int size) {
-        Page<Task> tasks = taskRepository.findAll(
+        Page<Task> tasks = taskRepository.findByDeletedAtIsNull(
                 PageRequest.of(
                         page,
                         size,
@@ -149,7 +149,7 @@ public class TaskService {
     // Task 단건 조회
     @Transactional(readOnly = true)
     public TaskResponse getTask(Long taskId) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
+        Task task = taskRepository.findByIdAndDeletedAtIsNull(taskId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
 
@@ -160,7 +160,7 @@ public class TaskService {
 
     // Task 전체 수정
     public TaskResponse updateTask(Long taskId, TaskUpdateAllRequest taskUpdateAllRequest) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
+        Task task = taskRepository.findByIdAndDeletedAtIsNull(taskId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
         User assignee = userRepository.findById(taskUpdateAllRequest.assigneeId()).orElseThrow(
@@ -183,7 +183,7 @@ public class TaskService {
 
     // Status 수정
     public TaskResponse updateStatus(Long taskId, TaskUpdateStatusRequest taskUpdateStatusRequest) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
+        Task task = taskRepository.findByIdAndDeletedAtIsNull(taskId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
 
@@ -196,7 +196,7 @@ public class TaskService {
 
     // Task 삭제
     public Void deleteTask(Long taskId) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
+        Task task = taskRepository.findByIdAndDeletedAtIsNull(taskId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
 
