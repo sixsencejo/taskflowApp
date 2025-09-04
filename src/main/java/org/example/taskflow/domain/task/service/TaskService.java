@@ -206,6 +206,7 @@ public class TaskService {
         // 이거 소프트 딜리트 이렇게 사용하는 것인지 내일 물어보자
         // 이거 삭제할 때 로그인된 사용자와 작업을 생성한 사용자와 비교한 이후에 삭제해야 하는지 물어보자
         task.softDelete();
+        return null;
     }
 
     // 헬퍼 메서드
