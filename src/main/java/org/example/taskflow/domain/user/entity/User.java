@@ -1,14 +1,12 @@
 package org.example.taskflow.domain.user.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.taskflow.common.entity.SoftDeletableEntity;
+import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.user.enums.UserRole;
 
 @Entity
@@ -16,6 +14,9 @@ import org.example.taskflow.domain.user.enums.UserRole;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends SoftDeletableEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String username;
     private String email;
     private String name;
@@ -23,6 +24,18 @@ public class User extends SoftDeletableEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", columnDefinition = "logtext")
+    private Team team;
+
+    public static User fromTeam(Long teamId) {
+        return new User(teamId);
+    }
+
+    private User(Long id) {
+        this.id = id;
+    }
 
     @Builder
     public User(String username, String email, String password, String name, UserRole role) {
