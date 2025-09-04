@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,10 +35,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 인가(Authorization) 규칙 설정
                 .authorizeHttpRequests(authorize -> authorize
-                        // "/api/auth/**" 경로는 모두 접근 허용
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // 특정 경로만 허용
+                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated())
+                // 예외 처리 설정: 인증 실패 시 커스텀 응답
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
                 // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 이전에 추가
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
