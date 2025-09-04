@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.taskflow.common.entity.SoftDeletableEntity;
-import org.example.taskflow.domain.team.entity.Teams;
+import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.user.enums.UserRole;
 
 @Entity
@@ -22,6 +22,11 @@ public class User extends SoftDeletableEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
+
 
     @Builder
     public User(String username, String email, String password, String name, UserRole role) {
