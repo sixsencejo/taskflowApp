@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,9 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String token = getJwtFromRequest(request);
         try {
-            String token = getJwtFromRequest(request);
-
             // 토큰 존재하는지 유효한지 Access인지 확인
             if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token) && jwtTokenProvider.isAccessToken(token)) {
                 String username = jwtTokenProvider.getUsername(token);
@@ -40,9 +40,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+        } catch (AuthenticationException e) {
+            // 예외를 잡은 후 AuthenticationEntryPoint가 처리하도록
+            throw e;
         } catch (Exception e) {
-            SecurityContextHolder.clearContext();
-            logger.error("보안 컨텍스트에서 사용자 인증을 사용할 수 없습니다.", e);
+            logger.error("필터 처리 중 예기치 않은 오류 발생", e);
+            throw new RuntimeException("Unexpected error", e);
         }
 
         filterChain.doFilter(request, response);
