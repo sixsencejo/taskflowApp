@@ -14,9 +14,7 @@ import org.example.taskflow.domain.user.enums.UserRole;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends SoftDeletableEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
     private String username;
     private String email;
     private String name;
@@ -26,16 +24,9 @@ public class User extends SoftDeletableEntity {
     private UserRole role = UserRole.USER;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", columnDefinition = "logtext")
+    @JoinColumn(name = "team_id")
     private Team team;
 
-    public static User fromTeam(Long teamId) {
-        return new User(teamId);
-    }
-
-    private User(Long id) {
-        this.id = id;
-    }
 
     @Builder
     public User(String username, String email, String password, String name, UserRole role) {

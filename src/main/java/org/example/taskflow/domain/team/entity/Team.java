@@ -2,20 +2,28 @@ package org.example.taskflow.domain.team.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.example.taskflow.common.entity.BaseEntity;
+import org.example.taskflow.domain.user.entity.User;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Setter
 @Table(name = "team")
-public class Team {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Team extends BaseEntity {
 
+    @Column(length = 10)
+    private String name;
+
+    @Column(length = 100)
+    private String explain;
+
+    @Builder
+    public Team(String name, String explain) {
+        this.name = name;
+        this.explain = explain;
+    }
 
 }
