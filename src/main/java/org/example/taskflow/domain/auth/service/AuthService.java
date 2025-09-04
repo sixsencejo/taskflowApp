@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
+    @Transactional
     public UserResponse register(AuthRegisterRequest request) {
         if (userRepository.existsByUsernameAndDeletedAtIsNull(request.getUsername())) {
             throw new CustomException(ErrorCode.USERNAME_ALREADY_EXISTS);
@@ -48,6 +50,7 @@ public class AuthService {
         return UserResponse.from(savedUser);
     }
 
+    @Transactional
     public AuthLoginResponse login(AuthLoginRequest request) {
         // UserDetailsService를 사용하여 사용자 정보 로드
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
