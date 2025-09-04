@@ -19,8 +19,9 @@ public record TaskUpdateAllRequest(
 
         @FutureOrPresent(message = "기한을 오늘 또는 오늘 이후로 설정해야합니다.")
         LocalDateTime dueDate,
-        
+
         Priority priority,
-        Status status
+        Status status,
+        Long assigneeId
 ) {
 }

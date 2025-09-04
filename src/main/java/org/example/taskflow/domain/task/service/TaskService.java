@@ -48,8 +48,7 @@ public class TaskService {
         return getTaskResponse(task, assigneeResponse);
     }
 
-    // default - page = 0, size = 10
-    // 자신의 Task 목록 조회
+    // Task 목록 조회
     // status 시
     @Transactional(readOnly = true)
     public TaskPageResponse<TaskResponse> getTaskAllByStatus(Status status, int page, int size) {
@@ -73,7 +72,7 @@ public class TaskService {
         );
     }
 
-    // 자신의 Task 목록 조회
+    // Task 목록 조회
     // search 시
     @Transactional(readOnly = true)
     public TaskPageResponse<TaskResponse> getTaskAlBySearch(String search, int page, int size) {
@@ -97,7 +96,7 @@ public class TaskService {
         );
     }
 
-    // 자신의 Task 목록 조회
+    // Task 목록 조회
     // assigneeId 시(전체 조회)
     @Transactional(readOnly = true)
     public TaskPageResponse<TaskResponse> getTaskAllByAssigneeId(Long assigneeId, int page, int size) {
@@ -125,13 +124,10 @@ public class TaskService {
         );
     }
 
-    // 자신의 Task 목록 전체 조회
+    // Task 목록 전체 조회
     @Transactional(readOnly = true)
-    public TaskPageResponse<TaskResponse> getTaskAll(Long userId, int page, int size) {
-        User assignee = userRepository.getReferenceById(userId);
-
-        Page<Task> tasks = taskRepository.findByAssignee(
-                assignee,
+    public TaskPageResponse<TaskResponse> getTaskAll(int page, int size) {
+        Page<Task> tasks = taskRepository.findAll(
                 PageRequest.of(
                         page,
                         size,
@@ -167,7 +163,7 @@ public class TaskService {
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
-        User assignee = userRepository.findById(task.getAssignee().getId()).orElseThrow(
+        User assignee = userRepository.findById(taskUpdateAllRequest.assigneeId()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
@@ -203,8 +199,7 @@ public class TaskService {
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
-        // 이거 소프트 딜리트 이렇게 사용하는 것인지 내일 물어보자
-        // 이거 삭제할 때 로그인된 사용자와 작업을 생성한 사용자와 비교한 이후에 삭제해야 하는지 물어보자
+
         task.softDelete();
         return null;
     }

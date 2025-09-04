@@ -33,7 +33,6 @@ public class TaskController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Long assigneeId
     ) {
-        Long userId = 1L;
         TaskPageResponse<TaskResponse> taskResponses;
 
         if (status != null) {
@@ -48,7 +47,7 @@ public class TaskController {
             taskResponses = taskService.getTaskAllByAssigneeId(assigneeId, page, size);
             return ResponseUtil.success(taskResponses, ResponseCode.TASK_FINDS_RESPONSE.getMessage());
         }
-        taskResponses = taskService.getTaskAll(userId, page, size);
+        taskResponses = taskService.getTaskAll(page, size);
         return ResponseUtil.success(taskResponses, ResponseCode.TASK_FINDS_RESPONSE.getMessage());
     }
 
