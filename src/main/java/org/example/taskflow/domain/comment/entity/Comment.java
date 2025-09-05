@@ -38,5 +38,9 @@ public class Comment extends SoftDeletableEntity {
         this.task = task;
         this.parent = parent;
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
 

@@ -3,10 +3,7 @@ package org.example.taskflow.domain.comment.service;
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
-import org.example.taskflow.domain.comment.dto.CommentCreateRequest;
-import org.example.taskflow.domain.comment.dto.CommentPageResponse;
-import org.example.taskflow.domain.comment.dto.CommentResponse;
-import org.example.taskflow.domain.comment.dto.CommentUserResponse;
+import org.example.taskflow.domain.comment.dto.*;
 import org.example.taskflow.domain.comment.entity.Comment;
 import org.example.taskflow.domain.comment.repository.CommentRepository;
 import org.example.taskflow.domain.task.entity.Task;
@@ -72,7 +69,7 @@ public class CommentService {
 
         Page<Comment> comments;
         if ("oldest".equals(sort)) {
-            comments = commentRepository.findAllWithParentOrderByDescAndDeletedAtIsNull(
+            comments = commentRepository.findAllWithParentOrderByDesc(
                     PageRequest.of(
                             page,
                             size
@@ -96,6 +93,47 @@ public class CommentService {
                 comments.getSize(),
                 comments.getNumber()
         );
+    }
+
+    // 댓글 수정
+    public CommentResponse updateComment(Long taskId, Long commentId, CommentUpdateRequest commentUpdateRequest) {
+        taskRepository.findById(taskId).orElseThrow(
+                () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
+        );
+
+        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId).orElseThrow(
+                () -> new CustomException(ErrorCode.INVALID_REQUEST_PARAMETER, "존재하지 않는 댓글입니다.")
+        );
+
+        comment.updateContent(commentUpdateRequest.content());
+
+        CommentUserResponse commentUserResponse = getCommentUserResponse(comment.getUser());
+
+        return getCommentResponse(comment, commentUserResponse);
+    }
+
+    // 댓글 삭제
+    public int deleteComment(Long taskId, Long commentId) {
+        taskRepository.findById(taskId).orElseThrow(
+                () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
+        );
+
+        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId).orElseThrow(
+                () -> new CustomException(ErrorCode.INVALID_REQUEST_PARAMETER, "존재하지 않는 댓글입니다.")
+        );
+
+        // 자식 댓글일 경우
+        if (comment.getParent() != null) {
+            comment.softDelete();
+            return 1;
+        }
+
+        // 부모 댓글일 경우 자식 댓글도 삭제 (재귀적 삭제)
+        List<Comment> childComments = commentRepository.findByParent(comment);
+
+        childComments.forEach(Comment::softDelete);
+
+        return 2;
     }
 
     // 헬퍼 메서드
