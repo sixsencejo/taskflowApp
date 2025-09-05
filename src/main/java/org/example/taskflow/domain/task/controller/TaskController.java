@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.common.utils.ResponseUtil;
+import org.example.taskflow.domain.auth.jwt.JwtTokenProvider;
 import org.example.taskflow.domain.task.dto.*;
 import org.example.taskflow.domain.task.enums.ResponseCode;
 import org.example.taskflow.domain.task.enums.Status;
@@ -12,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tasks")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping
     public CommonResponse<TaskResponse> createTask(
@@ -84,4 +87,12 @@ public class TaskController {
     ) {
         return ResponseUtil.success(taskService.deleteTask(taskId), ResponseCode.TASK_DELETED_RESPONSE.getMessage());
     }
+
+//    @GetMapping("/users")
+//    public CommonResponse<UserInfoResponse> getAssignee(
+//            @RequestHeader("Authorization") String authorizationHeader
+//    ) {
+//        Long userId = jwtTokenProvider.getUserId(authorizationHeader);
+//        return ResponseUtil.success(taskService.getAssignee(userId), ResponseCode.TASK_FOR_USER_RESPONSE.getMessage());
+//    }
 }
