@@ -15,4 +15,8 @@ public abstract class SoftDeletableEntity extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
+    // 계정 복구용
+    public void recover() {
+        this.deletedAt = null;
+    }
 }

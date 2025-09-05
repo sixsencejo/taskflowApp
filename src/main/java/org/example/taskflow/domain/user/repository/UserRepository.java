@@ -1,17 +1,27 @@
 package org.example.taskflow.domain.user.repository;
 
+import org.example.taskflow.common.exception.CustomException;
+import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
+
     Optional<User> findByUsernameAndDeletedAtIsNull(String username);
 
-    Optional<User> findByEmailAndDeletedAtIsNull(String email);
+    default User getByUsernameWithoutDeletedAtOrThrow(String username) {
+        return findByUsernameAndDeletedAtIsNull(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
 
-    boolean existsByUsernameAndDeletedAtIsNull(String username);
+    default User getByUsernameOrThrow(String username) {
+        return findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
 
-    boolean existsByEmailAndDeletedAtIsNull(String email);
+    Optional<User> findByEmail(String email);
 
 }
