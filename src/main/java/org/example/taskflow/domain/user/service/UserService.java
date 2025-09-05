@@ -11,6 +11,8 @@ import org.example.taskflow.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -40,14 +42,16 @@ public class UserService {
 
     // Task - 사용자 정보 조회
     @Transactional(readOnly = true)
-    public UserInfoForTaskResponse getAssignee(Long userId) {
-        User user = userRepository.getReferenceById(userId);
+    public List<UserInfoForTaskResponse> getUsers() {
+        List<User> users = userRepository.findAll();
 
-        return new UserInfoForTaskResponse(
-                user.getId(),
-                user.getEmail(),
-                user.getName(),
-                user.getRole()
-        );
+        return users.stream()
+                .map(user -> new UserInfoForTaskResponse(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getName(),
+                        user.getRole()
+                ))
+                .toList();
     }
 }
