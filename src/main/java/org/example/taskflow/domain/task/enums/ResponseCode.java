@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ResponseCode {
+
     TASK_CREATED_RESPONSE("Task가 생성되었습니다."),
     TASK_FINDS_RESPONSE("Task 목록을 조회했습니다."),
     TASK_FIND_RESPONSE("Task를 조회했습니다."),

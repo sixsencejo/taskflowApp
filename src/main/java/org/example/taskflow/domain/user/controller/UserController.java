@@ -3,6 +3,7 @@ package org.example.taskflow.domain.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.common.utils.ResponseUtil;
+import org.example.taskflow.domain.user.dto.UserInfoForTaskResponse;
 import org.example.taskflow.domain.user.dto.UserResponse;
 import org.example.taskflow.domain.user.enums.ResponseCode;
 import org.example.taskflow.domain.user.service.UserService;
@@ -23,5 +24,11 @@ public class UserController {
     public ResponseEntity<CommonResponse<UserResponse>> getCurrentUser() {
         UserResponse userResponse = userService.getCurrentUser();
         return ResponseEntity.ok(ResponseUtil.success(userResponse, ResponseCode.USER_FETCH_RESPONSE.getMessage()));
+    }
+
+    @GetMapping
+    public CommonResponse<UserInfoForTaskResponse> getAssignee() {
+        Long userId = userService.getUserId();
+        return ResponseUtil.success(userService.getAssignee(userId), ResponseCode.USER_FOR_TASK_RESPONSE.getMessage());
     }
 }
