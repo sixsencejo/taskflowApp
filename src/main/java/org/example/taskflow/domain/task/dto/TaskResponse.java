@@ -13,6 +13,7 @@ public record TaskResponse(
         LocalDateTime dueDate,
         Priority priority,
         Status status,
+        Long assigneeId,
         Assignee assignee,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

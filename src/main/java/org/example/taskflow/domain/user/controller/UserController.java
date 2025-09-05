@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -27,8 +29,7 @@ public class UserController {
     }
 
     @GetMapping
-    public CommonResponse<UserInfoForTaskResponse> getAssignee() {
-        Long userId = userService.getUserId();
-        return ResponseUtil.success(userService.getAssignee(userId), ResponseCode.USER_FOR_TASK_RESPONSE.getMessage());
+    public CommonResponse<List<UserInfoForTaskResponse>> getUsers() {
+        return ResponseUtil.success(userService.getUsers(), ResponseCode.USER_FOR_TASK_RESPONSE.getMessage());
     }
 }
