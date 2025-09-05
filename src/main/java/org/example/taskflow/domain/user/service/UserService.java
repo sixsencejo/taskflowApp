@@ -1,6 +1,8 @@
 package org.example.taskflow.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.taskflow.common.exception.CustomException;
+import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.common.utils.SecurityUtil;
 import org.example.taskflow.domain.user.dto.UserResponse;
 import org.example.taskflow.domain.user.entity.User;
@@ -23,5 +25,15 @@ public class UserService {
 
         // User 엔티티를 UserResponse DTO로 변환하여 반환합니다.
         return UserResponse.from(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getUserId() {
+        String username = SecurityUtil.getCurrentUsername();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return user.getId();
     }
 }
