@@ -1,0 +1,106 @@
+name: 📋 작업 할당
+description: 새로운 작업을 생성하고 팀원에게 할당합니다
+title: "[TASK] "
+labels: ["task", "needs-assignment"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 새로운 작업 생성
+        팀원들과 협업을 위해 아래 정보를 상세히 작성해주세요.
+
+  - type: dropdown
+    id: task_type
+    attributes:
+      label: 작업 유형
+      options:
+        - 도메인을 선택해 주세요
+        - Auth (인증)
+        - User (사용자)
+        - Team (팀)
+        - Task (작업)
+        - Dashboard (대쉬보드)
+        - Search (검색)
+        - Activity (활동)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      options:
+        - 🔴 긴급 (1-2 시간 이내)
+        - 🟡 보통 (하루)
+        - 🟢 낮음 (여유 있을 때)
+      default: 1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: estimated_time
+    attributes:
+      label: 예상 소요 시간
+      description: 이 작업 완료까지 예상 시간은?
+      options:
+        - 1-2시간
+        - 반나절 (4시간)
+        - 1일
+        - 2-3일
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 작업 설명
+      placeholder: |
+        예시:
+        - JWT 토큰 기반 인증 API 개발
+        - 회원가입 폼 validation 추가
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: 완료 조건 (Acceptance Criteria)
+      description: 이 작업이 완료되었다고 판단할 수 있는 기준
+      placeholder: |
+        예시:
+        - [ ] Postman 통과
+        - [ ] 잘못된 입력 시 에러 메시지 표시
+        - [ ] 단위 테스트 작성 완료
+      value: |
+        - [ ] 
+        - [ ] 
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: 의존성
+      description: 이 작업을 시작하기 전에 완료되어야 할 다른 작업이나 조건
+      placeholder: |
+        예시:
+        - 인증/인가 구현 필요
+
+  - type: checkboxes
+    id: definition_of_done
+    attributes:
+      label: Definition of Done
+      description: 완료 기준
+      options:
+        - label: 코드 리뷰 완료
+          required: false
+        - label: 테스트 코드 통과
+          required: false
+        - label: 브랜치 정리 (merge/delete)
+          required: false
+        - label: 팀원들에게 완료 공유
+          required: false
