@@ -22,6 +22,6 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<CommonResponse<UserResponse>> getCurrentUser() {
         UserResponse userResponse = userService.getCurrentUser();
-        return ResponseEntity.ok(ResponseUtil.success(userResponse, ResponseCode.USER_FETCH_SUCCESS.getMessage()));
+        return ResponseEntity.ok(ResponseUtil.success(userResponse, ResponseCode.USER_FETCH_RESPONSE.getMessage()));
     }
 }
