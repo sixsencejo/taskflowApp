@@ -21,10 +21,19 @@ public class UserService {
         String username = SecurityUtil.getCurrentUsername();
 
         // 사용자 이름으로 데이터베이스에서 사용자 정보를 조회
-        User user = userRepository.findByUsernameAndDeletedAtIsNull(username)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.getByUsernameWithoutDeletedAtOrThrow(username);
 
         // User 엔티티를 UserResponse DTO로 변환하여 반환합니다.
         return UserResponse.from(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getUserId() {
+        String username = SecurityUtil.getCurrentUsername();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return user.getId();
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.auth.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,6 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 // CSRF(Cross-Site Request Forgery) 공격 방지 기능 비활성화 (JWT 사용 시 필요 없음)
                 .csrf(AbstractHttpConfigurer::disable)
                 // HTTP Basic 인증 비활성화
@@ -36,7 +38,7 @@ public class SecurityConfig {
                 // 인가(Authorization) 규칙 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 특정 경로만 허용
-                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/recover").permitAll()
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated())
                 // 예외 처리 설정: 인증 실패 시 커스텀 응답
