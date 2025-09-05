@@ -4,18 +4,23 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.common.utils.ResponseUtil;
+import org.example.taskflow.domain.auth.jwt.JwtTokenProvider;
 import org.example.taskflow.domain.task.dto.*;
 import org.example.taskflow.domain.task.enums.ResponseCode;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.task.service.TaskService;
+import org.example.taskflow.domain.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tasks")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     @PostMapping
     public CommonResponse<TaskResponse> createTask(
@@ -79,7 +84,9 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public CommonResponse<Void> deleteTask(@PathVariable Long taskId) {
+    public CommonResponse<Void> deleteTask(
+            @PathVariable Long taskId
+    ) {
         return ResponseUtil.success(taskService.deleteTask(taskId), ResponseCode.TASK_DELETED_RESPONSE.getMessage());
     }
 }

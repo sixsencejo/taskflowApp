@@ -223,6 +223,7 @@ public class TaskService {
                 task.getDueDate(),
                 task.getPriority(),
                 task.getStatus(),
+                assigneeResponse.id(),
                 assigneeResponse,
                 task.getCreatedAt(),
                 task.getUpdatedAt()
@@ -243,6 +244,7 @@ public class TaskService {
                             task.getDueDate(),
                             task.getPriority(),
                             task.getStatus(),
+                            assigneeResponse.id(),
                             assigneeResponse,
                             task.getCreatedAt(),
                             task.getUpdatedAt()

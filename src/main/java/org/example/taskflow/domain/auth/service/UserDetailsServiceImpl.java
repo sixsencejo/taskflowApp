@@ -1,6 +1,7 @@
 package org.example.taskflow.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.domain.user.entity.User;
 import org.example.taskflow.domain.user.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 사용자 정보 조회
         User user = userRepository.findByUsernameAndDeletedAtIsNull(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         // UserDetails 객체를 생성하여 반환
         // Spring Security의 User 객체는 사용자 이름, 비밀번호, 권한 목록을 가짐
