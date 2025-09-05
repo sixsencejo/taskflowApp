@@ -18,14 +18,11 @@ public class MemberService {
      private final TeamRepository teamRepository;
 
      @Transactional
-     public TeamResponse createMember(Long teamId,TeamRequest request) {
-        Team team = teamRepository.findById(teamId).orElseThrow(
-                () -> new IllegalArgumentException("팀이 없습니다."));
+     public TeamResponse createMember(Long teamId, TeamRequest request) {
+        Team team = teamRepository.findTeamByTeamIdAndNameAndDescription(teamId, request.getName(), request.getDescription()).orElseThrow(
+                () -> new IllegalArgumentException("회원이 구성되지 않았습니다."));
 
-        Team team2 = teamRepository.existsEmailAndDescription(request.getName(), request.getDescription()).orElseThrow(
-                () -> new IllegalArgumentException("설명하고 이름이 없습니다."));
-
-        Team newTeam = new Team(Team.of(team, team2));
+        Team newTeam = new Team(team);
         teamRepository.save(newTeam);
 
         return new TeamResponse(

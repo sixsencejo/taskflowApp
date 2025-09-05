@@ -1,20 +1,23 @@
 package org.example.taskflow.domain.team.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.team.dto.reponse.TeamResponse;
 import org.example.taskflow.domain.team.dto.request.TeamRequest;
 import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.team.repository.TeamRepository;
 import org.example.taskflow.domain.user.repository.UserRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class TeamServcie {
 
-    private TeamRepository teamRepository;
-    private UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     @Transactional
     public TeamResponse createTeam(TeamRequest request) {
@@ -51,8 +54,8 @@ public class TeamServcie {
 
         return new TeamResponse(
                 team.getId(),
-                team.getDescription(),
                 team.getName(),
+                team.getDescription(),
                 team.getCreatedAt(),
                 team.getUpdatedAt()
         );

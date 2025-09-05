@@ -12,10 +12,9 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class TeamController {
 
-    private TeamServcie teamServcie;
+    private final TeamServcie teamServcie;
 
     @PostMapping("/teams")
     public ResponseEntity<TeamResponse> createTeam(

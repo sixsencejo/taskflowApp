@@ -24,19 +24,18 @@ public class Team extends BaseEntity {
         this.description = description;
     }
 
-    public Team(Team team2) {
-        this.name = team2.getName();
-        this.description = team2.getDescription();
+
+    public Team(Team team) {
+        this.name = team.getName();
+        team.description = team.getDescription();
     }
 
-    public static Team of(Team team, Team team2) {
-        return Team.builder()
-                .name(team.getName())
-                .description(team.getDescription())
-                .name(team2.getName())
-                .description(team2.getDescription())
-                .build();
-    }
+    public static Team of(Team team) {
+       return Team.builder()
+               .name(team.getName())
+               .description(team.getDescription())
+               .build();
+   }
 
     public void update(String name, String description) {
         this.name = name;
