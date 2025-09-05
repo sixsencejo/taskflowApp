@@ -9,6 +9,7 @@ import org.example.taskflow.domain.task.dto.*;
 import org.example.taskflow.domain.task.enums.ResponseCode;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.task.service.TaskService;
+import org.example.taskflow.domain.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class TaskController {
 
     private final TaskService taskService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     @PostMapping
     public CommonResponse<TaskResponse> createTask(
@@ -87,12 +89,4 @@ public class TaskController {
     ) {
         return ResponseUtil.success(taskService.deleteTask(taskId), ResponseCode.TASK_DELETED_RESPONSE.getMessage());
     }
-
-//    @GetMapping("/users")
-//    public CommonResponse<UserInfoResponse> getAssignee(
-//            @RequestHeader("Authorization") String authorizationHeader
-//    ) {
-//        Long userId = jwtTokenProvider.getUserId(authorizationHeader);
-//        return ResponseUtil.success(taskService.getAssignee(userId), ResponseCode.TASK_FOR_USER_RESPONSE.getMessage());
-//    }
 }

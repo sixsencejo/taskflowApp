@@ -206,19 +206,6 @@ public class TaskService {
         return null;
     }
 
-    // 사용자 정보 조회
-    @Transactional(readOnly = true)
-    public UserInfoResponse getAssignee(Long uesrId) {
-        User user = userRepository.getReferenceById(uesrId);
-
-        return new UserInfoResponse(
-                user.getId(),
-                user.getEmail(),
-                user.getName(),
-                user.getRole()
-        );
-    }
-
     // 헬퍼 메서드
     public static Assignee getAssigneeResponse(Task task) {
         return new Assignee(

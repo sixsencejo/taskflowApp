@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.common.utils.SecurityUtil;
+import org.example.taskflow.domain.user.dto.UserInfoForTaskResponse;
 import org.example.taskflow.domain.user.dto.UserResponse;
 import org.example.taskflow.domain.user.entity.User;
 import org.example.taskflow.domain.user.repository.UserRepository;
@@ -35,5 +36,18 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return user.getId();
+    }
+
+    // Task - 사용자 정보 조회
+    @Transactional(readOnly = true)
+    public UserInfoForTaskResponse getAssignee(Long userId) {
+        User user = userRepository.getReferenceById(userId);
+
+        return new UserInfoForTaskResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getRole()
+        );
     }
 }

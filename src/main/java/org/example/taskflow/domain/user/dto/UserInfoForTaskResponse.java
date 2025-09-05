@@ -1,8 +1,8 @@
-package org.example.taskflow.domain.task.dto;
+package org.example.taskflow.domain.user.dto;
 
 import org.example.taskflow.domain.user.enums.UserRole;
 
-public record UserInfoResponse(
+public record UserInfoForTaskResponse(
 
         Long id,
         String email,
