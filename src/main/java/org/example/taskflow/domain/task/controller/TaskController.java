@@ -79,7 +79,9 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public CommonResponse<Void> deleteTask(@PathVariable Long taskId) {
+    public CommonResponse<Void> deleteTask(
+            @PathVariable Long taskId
+    ) {
         return ResponseUtil.success(taskService.deleteTask(taskId), ResponseCode.TASK_DELETED_RESPONSE.getMessage());
     }
 }
