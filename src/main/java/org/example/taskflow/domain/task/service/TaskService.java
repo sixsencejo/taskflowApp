@@ -3,7 +3,6 @@ package org.example.taskflow.domain.task.service;
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
-import org.example.taskflow.common.utils.SecurityUtil;
 import org.example.taskflow.domain.task.dto.*;
 import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Category;
@@ -29,8 +28,7 @@ public class TaskService {
 
     // Task 생성
     public TaskResponse createTask(TaskCreateRequest taskCreateRequest) {
-        String username = SecurityUtil.getCurrentUsername();
-        User assignee = userRepository.findByUsername(username).orElseThrow(
+        User assignee = userRepository.findById(taskCreateRequest.assigneeId()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
