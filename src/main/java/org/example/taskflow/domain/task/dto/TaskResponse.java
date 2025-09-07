@@ -1,6 +1,5 @@
 package org.example.taskflow.domain.task.dto;
 
-import org.example.taskflow.domain.task.enums.Category;
 import org.example.taskflow.domain.task.enums.Priority;
 import org.example.taskflow.domain.task.enums.Status;
 
@@ -14,7 +13,6 @@ public record TaskResponse(
         LocalDateTime dueDate,
         Priority priority,
         Status status,
-        Category category,
         Long assigneeId,
         Assignee assignee,
         LocalDateTime createdAt,
