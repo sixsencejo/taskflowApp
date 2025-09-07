@@ -3,6 +3,7 @@ package org.example.taskflow.domain.task.dto;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.example.taskflow.domain.task.enums.Category;
 import org.example.taskflow.domain.task.enums.Priority;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public record TaskCreateRequest(
         String description,
         @FutureOrPresent(message = "기한을 오늘 또는 오늘 이후로 설정해야합니다.")
         LocalDateTime dueDate,
+        Category category,
         Priority priority,
         Long assigneeId
 ) {
