@@ -12,20 +12,22 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query(
-            "select c  from Comment c " +
-                    "where c.deletedAt = null order by c.task.id, coalesce(c.parent.id, c.id), " +
-                    "c.createdAt desc"
+            "select c from Comment c where c.deletedAt is null and c.task.id = :taskId order by coalesce(c.parent.id, c.id), c.createdAt desc "
     )
-    Page<Comment> findAllWithParentOrderByDesc(Pageable pageable);
+    Page<Comment> findAllWithParentOrderByDesc(Long taskId, Pageable pageable);
 
     @Query(
-            "select c  from Comment c " +
-                    "where c.deletedAt = null order by c.task.id, coalesce(c.parent.id, c.id), " +
-                    "c.createdAt asc"
+            "select c from Comment c where c.deletedAt is null and c.task.id = :taskId order by coalesce(c.parent.id, c.id), c.createdAt asc"
     )
-    Page<Comment> findAllWithParentOrderByAsc(Pageable pageable);
+    Page<Comment> findAllWithParentOrderByAsc(Long taskId, Pageable pageable);
 
     Optional<Comment> findByIdAndDeletedAtIsNull(Long commentId);
 
     List<Comment> findByParent(Comment parent);
+
+    List<Comment> findByParentIsNull();
+
+    List<Comment> findByParentIsNotNull();
+
+    List<Comment> findByTaskIdAndDeletedAtIsNull(Long taskId);
 }
