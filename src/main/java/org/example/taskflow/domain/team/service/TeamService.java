@@ -61,6 +61,10 @@ public class TeamService {
 
     // 4.4 팀 생성
     public TeamResponse createTeam(TeamRequest teamRequest) {
+        if (teamRepository.existsByName(teamRequest.name())) {
+            throw new CustomException(ErrorCode.TEAM_NAME_ALREADY_EXISTS, ErrorCode.TEAM_NAME_ALREADY_EXISTS.getMessage());
+        }
+
         Team team = teamRepository.save(
                 Team.builder()
                         .name(teamRequest.name())
@@ -74,6 +78,10 @@ public class TeamService {
 
     // 4.5 팀 정보 수정
     public TeamResponse updateTeam(Long teamId, TeamRequest teamRequest) {
+        if (teamRepository.existsByName(teamRequest.name())) {
+            throw new CustomException(ErrorCode.TEAM_NAME_ALREADY_EXISTS, ErrorCode.TEAM_NAME_ALREADY_EXISTS.getMessage());
+        }
+        
         Team team = teamRepository.findById(teamId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND, ErrorCode.TASK_NOT_FOUND.getMessage())
         );

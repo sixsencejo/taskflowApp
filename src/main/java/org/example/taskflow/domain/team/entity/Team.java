@@ -15,7 +15,7 @@ import org.example.taskflow.domain.team.dto.TeamRequest;
 @Table(name = "teams")
 public class Team extends BaseEntity {
 
-    @Column(length = 10)
+    @Column(length = 50)
     private String name;
 
     @Column(length = 100)
