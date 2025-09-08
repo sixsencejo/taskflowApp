@@ -41,7 +41,7 @@ public class UserService {
     // Task - 사용자 정보 조회
     @Transactional(readOnly = true)
     public List<UserInfoForTaskResponse> getUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByDeletedAtIsNull();
 
         return users.stream()
                 .map(user -> new UserInfoForTaskResponse(

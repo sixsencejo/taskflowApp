@@ -29,7 +29,7 @@ public class TaskService {
 
     // Task 생성
     public TaskResponse createTask(TaskCreateRequest taskCreateRequest) {
-        User assignee = userRepository.findById(taskCreateRequest.assigneeId()).orElseThrow(
+        User assignee = userRepository.findByIdAndDeletedAtIsNull(taskCreateRequest.assigneeId()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
         log.info("assignee={}", assignee);
