@@ -15,5 +15,6 @@ public class ActivityRequest {
     private Long taskId;
     private String activityType;
     private String category;
+    private String changes;
 
 }
