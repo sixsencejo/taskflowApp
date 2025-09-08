@@ -77,4 +77,5 @@ public interface TaskServiceImpl {
      * @return 지연된 작업 목록
      */
     List<Task> findOverdueTasksByAssigneeId(Long assigneeId, LocalDate date);
+
 }
