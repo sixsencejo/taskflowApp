@@ -8,6 +8,7 @@ import org.example.taskflow.domain.activity.dto.ActivityResponse;
 import org.example.taskflow.domain.activity.service.ActivityService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class ActivityController {
             @RequestParam(required = false) Long taskId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+            @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<ActivityResponse> activityPage = activityService.getActivities(
                 typeCode, userId, taskId, startDate, endDate, pageable);
