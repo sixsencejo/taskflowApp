@@ -23,6 +23,7 @@ public class JwtTokenProvider {
     // Access Token 생성
     public String generateAccessToken(String username, String role) {
         Date now = new Date();
+        // 토큰 시간 설정
         Date expiration = new Date(now.getTime() + jwtProperties.getToken().getAccessExpiration());
 
         return Jwts.builder()
