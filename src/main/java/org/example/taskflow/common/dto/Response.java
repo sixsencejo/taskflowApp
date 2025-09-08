@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CommonResponse<T> {
+public class Response<T> {
     private final boolean success;
     private final String message;
     private final T data;
