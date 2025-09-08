@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("/available")
     public Response<List<UserResponse>> getInsertTeamUsers(
-            @RequestParam Long teamId
+            @RequestParam(required = false) Long teamId
     ) {
         List<UserResponse> userResponses;
         if (teamId == null) {

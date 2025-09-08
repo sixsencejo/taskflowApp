@@ -87,6 +87,13 @@ public class TeamService {
 
     // 4.6 팀 삭제
     public TeamDeleteResponse deleteTeam(Long teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow(
+                () -> new CustomException(ErrorCode.TASK_NOT_FOUND, ErrorCode.TASK_NOT_FOUND.getMessage())
+        );
+        List<User> users = userRepository.findByTeam(team);
+
+        users.forEach(User::deleteTeam);
+
         teamRepository.deleteById(teamId);
 
         return new TeamDeleteResponse(ResponseCode.COMMENT_DELETED_RESPONSE.getMessage());
@@ -94,7 +101,7 @@ public class TeamService {
 
     // 4.7 팀 멤버 추가
     public TeamResponse insertMember(Long teamId, TeamMemberInsertRequest teamMemberInsertRequest) {
-        User member = userRepository.findById(teamMemberInsertRequest.id()).orElseThrow(
+        User member = userRepository.findById(teamMemberInsertRequest.userId()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage())
         );
 
