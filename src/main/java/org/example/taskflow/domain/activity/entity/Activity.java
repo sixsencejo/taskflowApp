@@ -2,48 +2,59 @@ package org.example.taskflow.domain.activity.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.taskflow.common.entity.SoftDeletableEntity;
+import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.user.entity.User;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
-import java.time.LocalDateTime;
-
+/**
+ * 사용자의 활동 기록을 저장하는 엔티티입니다. (activities 테이블)
+ * 한국어 이름: 활동 로그
+ */
+@Getter
 @Entity
 @Table(name = "activities")
-@Getter
+@SQLDelete(sql = "UPDATE activities SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class Activity {
+public class Activity extends SoftDeletableEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    /**
+     * 활동을 수행한 사용자 (FK)
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "task_id", nullable = false)
-//    private Task task;
+    /**
+     * 활동의 유형 (FK)
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "activity_type_id", nullable = false)
+    private ActivityType activityType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
+    private Task task;
 
-    @Column(name = "activity_type", length = 50, nullable = false)
-    private String activityType;
+    /**
+     * 활동에 대한 상세 설명
+     * 예: "사용자 'admin'이 로그인했습니다."
+     */
+    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
+    private String description;
 
-    @Column(name = "category", length = 20, nullable = false)
-    private String category;
 
-    @CreatedDate
-    @Column(name = "createdAt", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
 
-//    @Builder
-//    public Activity(User user, Task task, String activityType, String category, LocalDateTime createdAt) {
-//        this.user = user;
-//        this.task = task;
-//        this.activityType = activityType;
-//        this.category = category;
-//    }
+    @Builder
+    public Activity(User user, ActivityType activityType, Task task, String description) {
+        this.user = user;
+        this.activityType = activityType;
+        this.task = task;
+        this.description = description;
+    }
 }
+
