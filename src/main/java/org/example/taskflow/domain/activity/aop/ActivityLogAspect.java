@@ -10,6 +10,8 @@ import org.example.taskflow.domain.activity.entity.ActivityType;
 import org.example.taskflow.domain.activity.enums.ActivityTypeCode;
 import org.example.taskflow.domain.activity.repository.ActivityRepository;
 import org.example.taskflow.domain.activity.repository.ActivityTypeRepository;
+import org.example.taskflow.domain.comment.dto.CommentResponse;
+import org.example.taskflow.domain.comment.repository.CommentRepository;
 import org.example.taskflow.domain.task.dto.TaskResponse;
 import org.example.taskflow.domain.task.dto.TaskUpdateStatusRequest;
 import org.example.taskflow.domain.task.entity.Task;
@@ -34,6 +36,7 @@ public class ActivityLogAspect {
     private final ActivityTypeRepository activityTypeRepository;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final CommentRepository commentRepository;
 
     @AfterReturning(pointcut = "execution(* org.example.taskflow.domain.task.service.TaskService.createTask(..))", returning = "result")
     public void logTaskCreation(JoinPoint joinPoint, Object result) {
@@ -76,47 +79,41 @@ public class ActivityLogAspect {
         });
     }
 
-//    /**
-//     * CommentService의 createComment 메소드가 성공적으로 실행된 후 로그를 기록합니다.
-//     */
-//    @AfterReturning(
-//            pointcut = "execution(* org.example.taskflow.domain.comment.service.CommentService.createComment(..))",
-//            returning = "result"
-//    )
-//    public void logCommentCreation(JoinPoint joinPoint, Object result) {
-//        Comment createdComment = (Comment) result;
-//        String description = String.format("작업 '%s'에 새로운 댓글이 작성되었습니다.", createdComment.getTask().getTitle());
-//        recordActivityLog(ActivityTypeCode.COMMENT_CREATED, description);
-//    }
-//
-//    /**
-//     * CommentService의 updateComment 메소드가 성공적으로 실행된 후 로그를 기록합니다.
-//     */
-//    @AfterReturning(
-//            pointcut = "execution(* org.example.taskflow.domain.comment.service.CommentService.updateComment(..))",
-//            returning = "result"
-//    )
-//    public void logCommentUpdate(JoinPoint joinPoint, Object result) {
-//        Comment updatedComment = (Comment) result;
-//        String description = String.format("작업 '%s'의 댓글이 수정되었습니다.", updatedComment.getTask().getTitle());
-//        recordActivityLog(ActivityTypeCode.COMMENT_UPDATED, description);
-//    }
-//
-//    /**
-//     * CommentService의 deleteComment 메소드가 성공적으로 실행된 후 로그를 기록합니다.
-//     */
-//    @AfterReturning(
-//            pointcut = "execution(* org.example.taskflow.domain.comment.service.CommentService.deleteComment(..))",
-//            returning = "result"
-//    )
-//    public void logCommentDelete(JoinPoint joinPoint, Object result) {
-//        Comment deleteComment = (Comment) result;
-//        String description = String.format("작업 '%s'의 댓글이 삭제되었습니다.", deleteComment.getTask().getTitle());
-//        recordActivityLog(ActivityTypeCode.COMMENT_DELETED, description);
-//    }
+    // --- Comment 관련 로그 ---
 
-    // ------------------- 설명 문자열 생성 헬퍼 메소드 -------------------
+    @AfterReturning(pointcut = "execution(* org.example.taskflow.domain.comment.service.CommentService.createComment(..))", returning = "result")
+    public void logCommentCreation(JoinPoint joinPoint, Object result) {
+        // 1. 결과를 CommentResponse DTO로 받습니다.
+        CommentResponse createdCommentDto = (CommentResponse) result;
+        // 2. DTO의 ID를 사용해 DB에서 완전한 Comment 엔티티를 다시 조회합니다.
+        commentRepository.findById(createdCommentDto.getId()).ifPresent(comment -> {
+            Task associatedTask = comment.getTask(); // 조회한 엔티티에서 Task를 가져옵니다.
+            String description = createCommentDescription(associatedTask);
+            recordActivityLog(ActivityTypeCode.COMMENT_CREATED, description, associatedTask);
+        });
+    }
 
+    @AfterReturning(pointcut = "execution(* org.example.taskflow.domain.comment.service.CommentService.updateComment(..))", returning = "result")
+    public void logCommentUpdate(JoinPoint joinPoint, Object result) {
+        CommentResponse updatedCommentDto = (CommentResponse) result;
+        commentRepository.findById(updatedCommentDto.getId()).ifPresent(comment -> {
+            Task associatedTask = comment.getTask();
+            String description = createCommentDescriptionForUpdate(associatedTask);
+            recordActivityLog(ActivityTypeCode.COMMENT_UPDATED, description, associatedTask);
+        });
+    }
+
+    @AfterReturning(pointcut = "execution(* org.example.taskflow.domain.comment.service.CommentService.deleteComment(..))")
+    public void logCommentDelete(JoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        Long taskId = (Long) args[0];
+        taskRepository.findById(taskId).ifPresent(task -> {
+            String description = createCommentDescriptionForDeletion(task);
+            recordActivityLog(ActivityTypeCode.COMMENT_DELETED, description, task);
+        });
+    }
+
+    //Task쪽 헬퍼메소드
     private String createTaskDescription(Task task) {
         if (task.getCategory() != null) {
             return String.format("새로운 '%s' 유형의 작업 '%s'을(를) 생성했습니다.", task.getCategory().name(), task.getTitle());
@@ -143,6 +140,19 @@ public class ActivityLogAspect {
             return String.format("'%s' 유형의 작업 '%s'이(가) 삭제되었습니다.", task.getCategory().name(), task.getTitle());
         }
         return String.format("작업 '%s'이(가) 삭제되었습니다.", task.getTitle());
+    }
+
+    //댓글쪽 헬퍼메소드
+    private String createCommentDescription(Task task) {
+        return String.format("작업 '%s'에 새로운 댓글이 작성되었습니다.", task.getTitle());
+    }
+
+    private String createCommentDescriptionForUpdate(Task task) {
+        return String.format("작업 '%s'의 댓글이 수정되었습니다.", task.getTitle());
+    }
+
+    private String createCommentDescriptionForDeletion(Task task) {
+        return String.format("작업 '%s'의 댓글이 삭제되었습니다.", task.getTitle());
     }
 
     // ------------------- 공통 로직 -------------------
