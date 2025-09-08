@@ -45,7 +45,7 @@ public class CommentService {
 
             // 부모 댓글의 부모값이 null이 아닐 시
             if (parent.getParent() != null) {
-                throw new CustomException(ErrorCode.INVALID_REQUEST_PARAMETER, "잘못된 요청입니다.");
+                throw new CustomException(ErrorCode.INVALID_REQUEST_PARAMETER, "상위 댓글의 설정이 잘못 되어있습니다.");
             }
         }
 
@@ -63,7 +63,6 @@ public class CommentService {
         return getCommentResponse(comment, commentUserResponse);
     }
 
-    // TODO: 제발 이거 정상작동 하게 해야 함 ㅋㅋ
     // 댓글 목록 조회
     @Transactional(readOnly = true)
     public CommentPageResponse<CommentGetAllResponse> getComments(Long taskId, String sort, int page, int size) {
