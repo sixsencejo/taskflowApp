@@ -1,11 +1,10 @@
-package org.example.taskflow.domain.dashboard.entity;
+package org.example.taskflow.domain.task.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.user.entity.User;
 
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "task_historys")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TaskHistory {
+public class TaskHistory { //2025-09-09 수정 이동재
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,7 +5,8 @@ import org.example.taskflow.common.dto.Response;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.dashboard.dto.DashboardStatsResponse;
 import org.example.taskflow.domain.dashboard.dto.MyTasksResponse;
-import org.example.taskflow.domain.dashboard.dto.WeeklyDto;
+import org.example.taskflow.domain.dashboard.dto.WeeklyTrendResponse;
+import org.example.taskflow.domain.dashboard.enums.ResponseMessage;
 import org.example.taskflow.domain.dashboard.service.DashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class DashBoardController {
     public ResponseEntity<Response<DashboardStatsResponse>> getDashboardStats() {
         DashboardStatsResponse statsResponse = dashboardService.getDashboardStats();
         return ResponseEntity.ok(
-                ResponseUtil.success(statsResponse, "대시보드 통계 조회 완료")
+                ResponseUtil.success(statsResponse, ResponseMessage.STATS_SUCCESS.getMessage())
         );
     }
 
@@ -37,7 +38,7 @@ public class DashBoardController {
     public ResponseEntity<Response<MyTasksResponse>> getMyTasks() {
         MyTasksResponse myTasksResponse = dashboardService.getMyTasks();
         return ResponseEntity.ok(
-                ResponseUtil.success(myTasksResponse, "내 작업 요약 조회 완료")
+                ResponseUtil.success(myTasksResponse, ResponseMessage.MY_TASKS_SUCCESS.getMessage())
         );
     }
 
@@ -46,16 +47,16 @@ public class DashBoardController {
         Map<String, Integer> teamProgressMap = dashboardService.getTeamProgress();
 
         return ResponseEntity.ok(
-                ResponseUtil.success(teamProgressMap, "팀 진행률 조회")
+                ResponseUtil.success(teamProgressMap, ResponseMessage.TEAM_PROGRESS_SUCCESS.getMessage())
         );
     }
 
     @GetMapping("/weekly-trend")
-    public ResponseEntity<Response<List<WeeklyDto>>> getWeeklyTrend() {
-        List<WeeklyDto> weeklyTrend = dashboardService.getWeeklyDto();
+    public ResponseEntity<Response<List<WeeklyTrendResponse>>> getWeeklyTrend() {
+        List<WeeklyTrendResponse> weeklyTrend = dashboardService.getWeeklyTrendResponse();
 
         return ResponseEntity.ok(
-                ResponseUtil.success(weeklyTrend, "주간 작업 추세 조회 완료")
+                ResponseUtil.success(weeklyTrend, ResponseMessage.WEEKLY_TREND_SUCCESS.getMessage())
         );
     }
 }

@@ -4,14 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.common.utils.SecurityUtil;
+import org.example.taskflow.domain.search.dto.UserSearchDto;
 import org.example.taskflow.domain.user.dto.UserInfoForTaskResponse;
 import org.example.taskflow.domain.user.dto.UserResponse;
 import org.example.taskflow.domain.user.entity.User;
 import org.example.taskflow.domain.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,10 +56,24 @@ public class UserService {
                 .toList();
     }
 
+    // 현재 로그인 된 유저 엔티티 반환 2025-09-08 작성 이동재
     @Transactional(readOnly = true)
     public User getCurrentUserEntity() {
         String username = SecurityUtil.getCurrentUsername();
 
         return userRepository.getByUsernameWithoutDeletedAtOrThrow(username);
     }
+
+    //유저 통합 검색 서비스 기능 2025-09-09 작성 이동재
+    @Transactional(readOnly = true)
+    public List<UserSearchDto> searchUsersForIntegratedSearch(String query, int limit) {
+        List<User> users = userRepository.findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseAndDeletedAtIsNull(
+                query, query, PageRequest.of(0, limit)
+        );
+
+        return users.stream()
+                .map(UserSearchDto::from)
+                .collect(Collectors.toList());
+    }
+
 }
