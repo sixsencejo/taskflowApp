@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/teams")
 public class MemberController {
 
     private final MemberService memberService;
 
     //회원 추가
-    @PostMapping("/teams/{teamId}/members")
+    @PostMapping("/{teamId}/members")
     public ResponseEntity<TeamResponse> createMember(
             @PathVariable Long teamId,
             @RequestBody TeamRequest request
@@ -25,7 +26,7 @@ public class MemberController {
     //회원삭제
     //teamId -> 팀식별
     //userId -> 유저인지 식별
-    @DeleteMapping("/teams/{teamId}/members/{userId}")
+    @DeleteMapping("/{teamId}/members/{userId}")
     private ResponseEntity<Void> deleteById(
             @PathVariable Long teamId,
             @PathVariable Long userId

@@ -12,30 +12,31 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/teams")
 public class TeamController {
 
     private final TeamService teamServcie;
 
-    @PostMapping("/teams")
+    @PostMapping
     public ResponseEntity<TeamResponse> createTeam(
             @Valid @RequestBody TeamRequest request
     ) {
         return ResponseEntity.ok(teamServcie.createTeam(request));
     }
 
-    @GetMapping("/teams")
+    @GetMapping
     public ResponseEntity<List<TeamResponse>> getAllTeams() {
         return ResponseEntity.ok(teamServcie.AllTeams());
     }
 
-    @GetMapping("/teams/{teamId}")
+    @GetMapping("/{teamId}")
     public ResponseEntity<TeamResponse> getTeams(
             @PathVariable Long teamId
     ) {
         return ResponseEntity.ok(teamServcie.OneTeam(teamId));
     }
 
-    @PutMapping("/teams/{teamId}")
+    @PutMapping("/{teamId}")
     public ResponseEntity<TeamResponse> updateTeam(
             @PathVariable Long teamId,
             @Valid @RequestBody TeamRequest request
@@ -43,7 +44,7 @@ public class TeamController {
         return ResponseEntity.ok(teamServcie.updateTeam(teamId, request));
     }
 
-    @DeleteMapping("/teams/{teamId}")
+    @DeleteMapping("/{teamId}")
     public ResponseEntity<Void> deleteTeam(
             @PathVariable Long teamId
     ) {
