@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.dashboard.dto.DashboardStatsResponse;
+import org.example.taskflow.domain.dashboard.dto.MyTasksResponse;
 import org.example.taskflow.domain.dashboard.service.DashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +25,19 @@ public class DashBoardController {
     public ResponseEntity<CommonResponse<DashboardStatsResponse>> getDashboardStats() {
         DashboardStatsResponse statsResponse = dashboardService.getDashboardStats();
         return ResponseEntity.ok(
-                ResponseUtil.success(statsResponse,"대시보드 통계 조회 완료")
+                ResponseUtil.success(statsResponse, "대시보드 통계 조회 완료")
+        );
+    }
+
+    /**
+     * 내 작업 요약 조회
+     */
+    @GetMapping("/my-tasks")
+    public ResponseEntity<CommonResponse<MyTasksResponse>> getMyTasks() {
+        MyTasksResponse myTasksResponse = dashboardService.getMyTasks();
+        return ResponseEntity.ok(
+                ResponseUtil.success(myTasksResponse, "내 작업 요약 조회 완료")
         );
     }
 }
+

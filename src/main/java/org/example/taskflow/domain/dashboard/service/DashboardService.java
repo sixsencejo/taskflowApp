@@ -2,12 +2,15 @@ package org.example.taskflow.domain.dashboard.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.dashboard.dto.*;
+import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.user.service.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,8 +51,19 @@ public class DashboardService implements DashboardServiceImpl {
     }
 
     @Override
-    public MyTasksResponse getMyTasks(String username) {
-        return null;
+    public MyTasksResponse getMyTasks() {
+        Long userId = userService.getUserId();
+        LocalDate today = LocalDate.now();
+
+        List<Task> todayTasks = tasksService.findTodayTasksByAssigneeId(userId, today);
+        List<Task> upcomingTasks = tasksService.findUpcomingTasksByAssigneeId(userId, today);
+        List<Task> overdueTasks = tasksService.findOverdueTasksByAssigneeId(userId, today);
+
+        return MyTasksResponse.builder()
+                .todayTasks(convertToTaskSummaryList(todayTasks))
+                .upcomingTasks(convertToTaskSummaryList(upcomingTasks))
+                .overdueTasks(convertToTaskSummaryList(overdueTasks))
+                .build();
     }
 
     @Override
@@ -60,5 +74,21 @@ public class DashboardService implements DashboardServiceImpl {
     @Override
     public PageResponse<ActivityDto> getActivityDto(String username, Pageable pageable) {
         return null;
+    }
+
+
+    private List<TaskSummaryDto> convertToTaskSummaryList(List<Task> tasks) {
+        return tasks.stream()
+                .map(this::convertToTaskSummary)
+                .collect(Collectors.toList());
+    }
+
+    private TaskSummaryDto convertToTaskSummary(Task task) {
+        return TaskSummaryDto.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .status(task.getStatus().name())
+                .dueDate(task.getDueDate())
+                .build();
     }
 }

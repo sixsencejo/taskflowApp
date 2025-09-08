@@ -1,8 +1,10 @@
 package org.example.taskflow.domain.dashboard.service;
 
+import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface TaskServiceImpl {
 
@@ -41,4 +43,38 @@ public interface TaskServiceImpl {
      */
     int countTodayTasksByAssigneeId(Long assigneeId, LocalDate date);
 
+    /**
+     * 특정 팀에 속한 모든 작업을 조회
+     *
+     * @param teamId 팀 ID
+     * @return 팀의 모든 작업 리스트
+     */
+    List<Task> findTasksByTeamId(Long teamId);
+
+    /**
+     * 특정 사용자의 오늘 해야 할 작업 목록을 조회
+     *
+     * @param assigneeId 담당자 ID
+     * @param date 오늘 날짜
+     * @return 오늘 작업 목록
+     */
+    List<Task> findTodayTasksByAssigneeId(Long assigneeId, LocalDate date);
+
+    /**
+     * 특정 사용자의 다가오는 작업 목록을 조회
+     *
+     * @param assigneeId 담당자 ID
+     * @param date 기준 날짜
+     * @return 향후 작업 목록
+     */
+    List<Task> findUpcomingTasksByAssigneeId(Long assigneeId, LocalDate date);
+
+    /**
+     * 특정 사용자의 기한이 지난 작업 목록을 조회
+     *
+     * @param assigneeId 담당자 ID
+     * @param date 기준 날짜
+     * @return 지연된 작업 목록
+     */
+    List<Task> findOverdueTasksByAssigneeId(Long assigneeId, LocalDate date);
 }
