@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.dashboard.dto.*;
 import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
+import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.user.service.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +21,7 @@ public class DashboardService implements DashboardServiceImpl {
 
     private final TasksService tasksService;
     private final UserService userService;
+    private final TeamsService teamsService;
 
     @Override
     public DashboardStatsResponse getDashboardStats() {
@@ -32,8 +36,8 @@ public class DashboardService implements DashboardServiceImpl {
         int overdueTasks = tasksService.countOverdueTasksByAssigneeId(userId,today);
         int myTasksToday = tasksService.countTodayTasksByAssigneeId(userId,today);
 
-        // 팀 진행률 관련 메서드 개발 예정
-        int teamProgress = 0;
+        List<Task> teamTasks = tasksService.findTasksByTeamId(userId);
+        int teamProgress = calculateTeamProgress(teamTasks);
 
         // 완료율
         int completionRate = totalTasks > 0 ? (completedTasks * 100) / totalTasks : 0;
@@ -67,8 +71,18 @@ public class DashboardService implements DashboardServiceImpl {
     }
 
     @Override
-    public TeamProgressResponse getTeamProgress(String username) {
-        return null;
+    public Map<String, Integer> getTeamProgress() {
+
+        Map<String, Integer> teamProgressMap = new HashMap<>();
+        List<Team> allTeams = teamsService.findAll();
+
+        for (Team team : allTeams) {
+            List<Task> teamTasks = tasksService.findTasksByTeamId(team.getId());
+            int progress = calculateTeamProgress(teamTasks);
+            teamProgressMap.put(team.getName(), progress);
+        }
+
+        return teamProgressMap;
     }
 
     @Override
@@ -90,5 +104,15 @@ public class DashboardService implements DashboardServiceImpl {
                 .status(task.getStatus().name())
                 .dueDate(task.getDueDate())
                 .build();
+    }
+
+    private int calculateTeamProgress(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            return 0;
+        }
+        long completedCount = tasks.stream()
+                .filter(task -> task.getStatus().equals(Status.DONE))
+                .count();
+        return (int) ((completedCount * 100) / tasks.size());
     }
 }

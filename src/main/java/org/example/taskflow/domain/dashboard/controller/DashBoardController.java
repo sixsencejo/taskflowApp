@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -37,6 +39,14 @@ public class DashBoardController {
         MyTasksResponse myTasksResponse = dashboardService.getMyTasks();
         return ResponseEntity.ok(
                 ResponseUtil.success(myTasksResponse, "내 작업 요약 조회 완료")
+        );
+    }
+    @GetMapping("team-progress")
+    public ResponseEntity<CommonResponse<Map<String, Integer>>> getTeamProgress() {
+        Map<String, Integer> teamProgressMap = dashboardService.getTeamProgress();
+
+        return ResponseEntity.ok(
+                ResponseUtil.success(teamProgressMap,"팀 진행률 조회")
         );
     }
 }

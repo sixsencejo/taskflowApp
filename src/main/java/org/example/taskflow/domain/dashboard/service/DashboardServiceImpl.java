@@ -1,7 +1,12 @@
 package org.example.taskflow.domain.dashboard.service;
 
-import org.example.taskflow.domain.dashboard.dto.*;
+import org.example.taskflow.domain.dashboard.dto.ActivityDto;
+import org.example.taskflow.domain.dashboard.dto.DashboardStatsResponse;
+import org.example.taskflow.domain.dashboard.dto.MyTasksResponse;
+import org.example.taskflow.domain.dashboard.dto.PageResponse;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Map;
 
 public interface DashboardServiceImpl {
     /**
@@ -21,10 +26,9 @@ public interface DashboardServiceImpl {
     /**
      * 팀별 진행률 조회
      *
-     * @param username
      * @return 팀별 진행률
      */
-    TeamProgressResponse getTeamProgress(String username);
+    Map getTeamProgress();
 
     /**
      * 탐 활동 내역을 페이징으로 조회
