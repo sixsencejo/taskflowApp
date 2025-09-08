@@ -2,6 +2,8 @@ package org.example.taskflow.domain.dashboard.repository;
 
 import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -73,4 +75,11 @@ public interface TasksRepository extends JpaRepository<Task, Long> {
             "ORDER BY t.dueDate ASC")
     List<Task> findOverdueTasksByAssigneeId(@Param("assigneeId") Long assigneeId,
                                             @Param("currentTime") LocalDateTime currentTime);
+
+    @Query("SELECT t FROM Task t WHERE " +
+            "LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%')) " +
+            "AND t.deletedAt IS NULL")
+    Page<Task> findByTitleContainingIgnoreCaseAndDeletedAtIsNull(
+            @Param("title") String title,
+            Pageable pageable);
 }

@@ -2,8 +2,15 @@ package org.example.taskflow.domain.dashboard.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.dashboard.repository.TasksRepository;
+import org.example.taskflow.domain.search.dto.TaskSearchDto;
+import org.example.taskflow.domain.task.dto.TaskPageResponse;
+import org.example.taskflow.domain.task.dto.TaskResponse;
 import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +75,37 @@ public class TasksService implements TaskServiceImpl {
     public List<Task> findOverdueTasksByAssigneeId(Long assigneeId, LocalDate date) {
         LocalDateTime currentTime = LocalDateTime.now();
         return tasksRepository.findOverdueTasksByAssigneeId(assigneeId, currentTime);
+    }
+
+    @Override
+    public List<TaskSearchDto> searchTasksForIntegratedSearch(String query, int limit) {
+        List<Task> tasks = tasksRepository.findByTitleContainingIgnoreCaseAndDeletedAtIsNull(
+                query, PageRequest.of(0, limit)
+        ).getContent();
+
+        return tasks.stream()
+                .map(TaskSearchDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TaskPageResponse<TaskResponse> searchTasks(String query, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Task> tasksPage = tasksRepository.findByTitleContainingIgnoreCaseAndDeletedAtIsNull(
+                query, pageable
+        );
+
+        List<TaskResponse> taskResponses = tasksPage.getContent().stream()
+                .map(TaskResponse::from) // 간단하고 깔끔!
+                .collect(Collectors.toList());
+
+        return new TaskPageResponse<>(
+                taskResponses,
+                tasksPage.getTotalElements(),
+                tasksPage.getTotalPages(),
+                tasksPage.getSize(),
+                tasksPage.getNumber()
+        );
     }
 }
