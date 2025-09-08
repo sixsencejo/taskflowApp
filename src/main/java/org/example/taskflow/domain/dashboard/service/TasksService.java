@@ -2,6 +2,7 @@ package org.example.taskflow.domain.dashboard.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.dashboard.repository.TasksRepository;
+import org.example.taskflow.domain.task.enums.Status;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class TasksService implements TaskServiceImpl {
     }
 
     @Override
-    public int countByAssigneeIdAndStatus(Long assigneeId, String status) {
+    public int countByAssigneeIdAndStatus(Long assigneeId, Status status) {
         return tasksRepository.countByAssigneeIdAndStatus(assigneeId, status);
     }
 

@@ -7,10 +7,9 @@ public interface DashboardServiceImpl {
     /**
      * 대시보드 통계 조회
      *
-     * @param username
      * @return 대시보드 통계
      */
-    DashboardStatsResponse getDashboardStats(String username);
+    DashboardStatsResponse getDashboardStats();
 
     /**
      * 사용자 작업 목록 조화

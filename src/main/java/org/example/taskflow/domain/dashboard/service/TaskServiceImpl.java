@@ -1,5 +1,7 @@
 package org.example.taskflow.domain.dashboard.service;
 
+import org.example.taskflow.domain.task.enums.Status;
+
 import java.time.LocalDate;
 
 public interface TaskServiceImpl {
@@ -19,7 +21,7 @@ public interface TaskServiceImpl {
      * @param status 작업 상태
      * @return 해당 상태의 작업 개수
      */
-    int countByAssigneeIdAndStatus(Long assigneeId, String status);
+    int countByAssigneeIdAndStatus(Long assigneeId, Status status);
 
     /**
      * 특정 사용자의 기한이 자난 작업 수 조회

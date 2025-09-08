@@ -1,6 +1,7 @@
 package org.example.taskflow.domain.dashboard.repository;
 
 import org.example.taskflow.domain.task.entity.Task;
+import org.example.taskflow.domain.task.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +21,7 @@ public interface TasksRepository extends JpaRepository<Task, Long> {
      * 특정 사용자의 특정 상태 작업 수 조회
      */
     @Query("SELECT COUNT(t) FROM Task t WHERE t.assignee.id = :assigneeId AND t.status = :status")
-    int countByAssigneeIdAndStatus(@Param("assigneeId") Long assigneeId, @Param("status") String status);
+    int countByAssigneeIdAndStatus(@Param("assigneeId") Long assigneeId, @Param("status") Status status);
 
     /**
      * 특정 사용자의 기한이 자난 작업 수 조회
