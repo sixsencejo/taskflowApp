@@ -33,8 +33,7 @@ public interface DashboardServiceImpl {
     /**
      * 탐 활동 내역을 페이징으로 조회
      *
-     * @param username
      * return 활동내역 페이지 응답
      */
-    PageResponse<ActivityDto> getActivityDto(String username, Pageable pageable);
+    PageResponse<ActivityDto> getActivities(Pageable pageable);
 }
