@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tasks/{taskId}/comments")
-@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class CommentController {
 
