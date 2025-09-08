@@ -5,6 +5,7 @@ import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.dashboard.dto.DashboardStatsResponse;
 import org.example.taskflow.domain.dashboard.dto.MyTasksResponse;
+import org.example.taskflow.domain.dashboard.dto.WeeklyDto;
 import org.example.taskflow.domain.dashboard.service.DashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -50,5 +52,13 @@ public class DashBoardController {
         );
     }
 
+    @GetMapping("/weekly-trend")
+    public ResponseEntity<CommonResponse<List<WeeklyDto>>> getWeeklyTrend() {
+        List<WeeklyDto> weeklyTrend = dashboardService.getWeeklyDto();
+
+        return ResponseEntity.ok(
+                ResponseUtil.success(weeklyTrend, "주간 작업 추세 조회 완료")
+        );
+    }
 }
 

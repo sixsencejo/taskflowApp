@@ -13,9 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +26,7 @@ public class DashboardService implements DashboardServiceImpl {
     private final TeamsService teamsService;
     private final ActivitiesService activitiesService;
     private final ActivityDtoConverter activityDtoConverter;
+    private final TaskHistoryService taskHistoryService;
 
     @Override
     public DashboardStatsResponse getDashboardStats() {
@@ -99,6 +99,36 @@ public class DashboardService implements DashboardServiceImpl {
         Page<ActivityDto> activityDtos = activities.map(activityDtoConverter::convertToActivityDto);
 
         return PageResponse.of(activityDtos);
+    }
+
+    public List<WeeklyDto> getWeeklyDto(){
+
+        Long userId = userService.getUserId();
+        List<WeeklyDto> weeklyTrend = new ArrayList<>();
+
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(6);
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate targetDate = startDate.plusDays(i);
+
+            String dayName = targetDate.getDayOfWeek()
+                    .getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+
+            int totalTasks = taskHistoryService.countNewTasksByAssigneeIdAndDate(userId, targetDate);
+            int completedTasks = taskHistoryService.countDoneTasksByAssigneeIdAndDate(userId, targetDate);
+
+            WeeklyDto trendDto = WeeklyDto.builder()
+                    .name(dayName)
+                    .tasks(totalTasks)
+                    .completed(completedTasks)
+                    .date(targetDate)
+                    .build();
+
+            weeklyTrend.add(trendDto);
+        }
+
+        return weeklyTrend;
     }
 
     private List<TaskSummaryDto> convertToTaskSummaryList(List<Task> tasks) {

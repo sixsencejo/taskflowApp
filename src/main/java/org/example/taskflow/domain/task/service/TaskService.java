@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
+import org.example.taskflow.domain.dashboard.service.TaskHistoryService;
 import org.example.taskflow.domain.task.dto.*;
 import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
@@ -26,6 +27,58 @@ public class TaskService {
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final TaskHistoryService taskHistoryService;
+
+    // 헬퍼 메서드
+    public static Assignee getAssigneeResponse(Task task) {
+        return new Assignee(
+                task.getAssignee().getId(),
+                task.getAssignee().getUsername(),
+                task.getAssignee().getName(),
+                task.getAssignee().getEmail()
+        );
+    }
+
+    // 헬퍼 메서드
+    public static TaskResponse getTaskResponse(Task task, Assignee assigneeResponse) {
+        return new TaskResponse(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getDueDate(),
+                task.getPriority(),
+                task.getStatus(),
+                task.getCategory(),
+                assigneeResponse.id(),
+                assigneeResponse,
+                task.getCreatedAt(),
+                task.getUpdatedAt()
+        );
+    }
+
+    // 헬퍼 메서드
+    public static List<TaskResponse> getTaskResponse(Page<Task> tasks) {
+        List<Task> taskList = tasks.getContent();
+        return taskList.stream()
+                .map(task -> {
+                    Assignee assigneeResponse = getAssigneeResponse(task);
+
+                    return new TaskResponse(
+                            task.getId(),
+                            task.getTitle(),
+                            task.getDescription(),
+                            task.getDueDate(),
+                            task.getPriority(),
+                            task.getStatus(),
+                            task.getCategory(),
+                            assigneeResponse.id(),
+                            assigneeResponse,
+                            task.getCreatedAt(),
+                            task.getUpdatedAt()
+                    );
+                })
+                .toList();
+    }
 
     // Task 생성
     public TaskResponse createTask(TaskCreateRequest taskCreateRequest) {
@@ -44,6 +97,7 @@ public class TaskService {
                         .build()
         );
 
+        taskHistoryService.recordTaskHistory(task,task.getStatus());
         Assignee assigneeResponse = getAssigneeResponse(task);
 
         return getTaskResponse(task, assigneeResponse);
@@ -168,6 +222,8 @@ public class TaskService {
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
+        Status oldStatus = task.getStatus();
+
         task.updateAll(
                 taskUpdateAllRequest.title(),
                 taskUpdateAllRequest.description(),
@@ -179,6 +235,11 @@ public class TaskService {
 
         Assignee assigneeResponse = getAssigneeResponse(task);
 
+        // 상태가 변경된 경우 히스토리 기록
+        if (!oldStatus.equals(task.getStatus())) {
+            taskHistoryService.recordTaskHistory(task, task.getStatus());
+        }
+
         return getTaskResponse(task, assigneeResponse);
     }
 
@@ -188,7 +249,13 @@ public class TaskService {
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND)
         );
 
+        Status oldStatus = task.getStatus();
         task.updateStatus(taskUpdateStatusRequest.status());
+
+        // 상태가 변경된 경우 히스토리 기록
+        if (!oldStatus.equals(task.getStatus())) {
+            taskHistoryService.recordTaskHistory(task, task.getStatus());
+        }
 
         Assignee assigneeResponse = getAssigneeResponse(task);
 
@@ -203,56 +270,5 @@ public class TaskService {
 
         task.softDelete();
         return null;
-    }
-
-    // 헬퍼 메서드
-    public static Assignee getAssigneeResponse(Task task) {
-        return new Assignee(
-                task.getAssignee().getId(),
-                task.getAssignee().getUsername(),
-                task.getAssignee().getName(),
-                task.getAssignee().getEmail()
-        );
-    }
-
-    // 헬퍼 메서드
-    public static TaskResponse getTaskResponse(Task task, Assignee assigneeResponse) {
-        return new TaskResponse(
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                task.getDueDate(),
-                task.getPriority(),
-                task.getStatus(),
-                task.getCategory(),
-                assigneeResponse.id(),
-                assigneeResponse,
-                task.getCreatedAt(),
-                task.getUpdatedAt()
-        );
-    }
-
-    // 헬퍼 메서드
-    public static List<TaskResponse> getTaskResponse(Page<Task> tasks) {
-        List<Task> taskList = tasks.getContent();
-        return taskList.stream()
-                .map(task -> {
-                    Assignee assigneeResponse = getAssigneeResponse(task);
-
-                    return new TaskResponse(
-                            task.getId(),
-                            task.getTitle(),
-                            task.getDescription(),
-                            task.getDueDate(),
-                            task.getPriority(),
-                            task.getStatus(),
-                            task.getCategory(),
-                            assigneeResponse.id(),
-                            assigneeResponse,
-                            task.getCreatedAt(),
-                            task.getUpdatedAt()
-                    );
-                })
-                .toList();
     }
 }
