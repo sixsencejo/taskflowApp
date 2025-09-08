@@ -18,10 +18,10 @@ import org.hibernate.annotations.Where;
 @Getter
 @Entity
 @Table(name = "activities")
-@SQLDelete(sql = "UPDATE activities SET deleted_at = NOW() WHERE id = ?") // ✅ 소프트 삭제 기능 추가
-@Where(clause = "deleted_at IS NULL") // ✅ 삭제되지 않은 데이터만 조회
+@SQLDelete(sql = "UPDATE activities SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Activity extends SoftDeletableEntity { // ✅ BaseTime 상속으로 변경
+public class Activity extends SoftDeletableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,12 +40,6 @@ public class Activity extends SoftDeletableEntity { // ✅ BaseTime 상속으로
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_type_id", nullable = false)
     private ActivityType activityType;
-
-    /**
-     * ✅ [핵심] 이 활동과 관련된 작업 (FK)
-     * ActivitySpecification.hasTaskId()가 동작하기 위해 반드시 필요합니다.
-     * 모든 활동이 Task에 연결되는 것은 아닐 수 있으므로 nullable = true 설정이 적절합니다.
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
@@ -61,7 +55,7 @@ public class Activity extends SoftDeletableEntity { // ✅ BaseTime 상속으로
     public Activity(User user, ActivityType activityType, Task task, String description) {
         this.user = user;
         this.activityType = activityType;
-        this.task = task; // ✅ Builder에 task 추가
+        this.task = task;
         this.description = description;
     }
 }
