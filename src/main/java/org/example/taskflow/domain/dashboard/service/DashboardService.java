@@ -36,7 +36,7 @@ public class DashboardService implements DashboardServiceImpl {
         int teamProgress = 0;
 
         // 완료율
-        int completionRate = totalTasks > 0 ? (completedTasks * 100) / inProgressTasks : 0;
+        int completionRate = totalTasks > 0 ? (completedTasks * 100) / totalTasks : 0;
 
         return DashboardStatsResponse.builder()
                 .totalTasks(totalTasks)
