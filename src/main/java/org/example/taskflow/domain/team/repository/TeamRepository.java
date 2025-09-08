@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface TeamRepository extends JpaRepository<Team, Long> {
     Optional<Team> findTeamByName(String name);
     @Query("select t from Team t where t.id = :teamId")
-    Optional<Team> DeleteByTeamId(@Param("teamId") Long teamId);
-    boolean existsDescription(String description);
+    Optional<Team> deleteByTeamId(@Param("teamId") Long teamId);
+    boolean existsByDescription(String description);
 
-    Optional<Team> findTeamByTeamIdAndNameAndDescription(Long teamId, String name, String description);
-    Optional<Team> findTeamByUserIdAndTeamId(Long userId, Long teamId);
+    Optional<Team> findByIdAndNameAndDescription(Long teamId, String name, String description);
+    //Optional<Team> findByUserIdAndId(Long userId, Long teamId);
 }

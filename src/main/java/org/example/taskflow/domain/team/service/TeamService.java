@@ -2,6 +2,7 @@ package org.example.taskflow.domain.team.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.taskflow.common.dto.CommonResponse;
 import org.example.taskflow.domain.team.dto.request.TeamRequest;
 import org.example.taskflow.domain.team.dto.response.TeamResponse;
 import org.example.taskflow.domain.team.entity.Team;
@@ -9,6 +10,7 @@ import org.example.taskflow.domain.team.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,50 +21,53 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
     @Transactional
-    public TeamResponse createTeam(TeamRequest request) {
-        Team team = teamRepository.findTeamByName(request.getName()).orElseThrow(
-                () -> new IllegalArgumentException("팀 이름이 존재하지 않습니다."));
+    public CommonResponse<TeamResponse> createTeam(TeamRequest request) {
+//        Team team = teamRepository.findTeamByName(request.getName()).orElseThrow(
+//                () -> new IllegalArgumentException("팀 이름이 존재하지 않습니다."));
+
+        Team team = Team.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .build();
 
         Team savedTeam = teamRepository.save(team);
 
-        return new TeamResponse(
-                savedTeam.getId(),
-                savedTeam.getName(),
-                savedTeam.getDescription(),
-                savedTeam.getCreatedAt(),
-                savedTeam.getUpdatedAt()
+        return new CommonResponse<>(
+                true,
+                "팀 생성 성공",
+                TeamResponse.from(savedTeam),
+                LocalDateTime.now()
         );
     }
 
     @Transactional
-    public List<TeamResponse> AllTeams() {
-        return teamRepository.findAll().stream()
-                .map(team -> new TeamResponse(
-                        team.getId(),
-                        team.getName(),
-                        team.getDescription(),
-                        team.getCreatedAt(),
-                        team.getUpdatedAt()
-                )).collect(Collectors.toList());
+    public CommonResponse<List<TeamResponse>> AllTeams() {
+        List<Team> teams = teamRepository.findAll();
+        List<TeamResponse> responses = teams.stream().map(TeamResponse::from).toList();
+        return new CommonResponse (
+                true,
+                "전체 팀 조회 성공",
+                responses,
+                LocalDateTime.now()
+        );
     }
 
     @Transactional
-    public TeamResponse OneTeam(Long teamId) {
+    public CommonResponse<TeamResponse> OneTeam(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(
                 () -> new IllegalArgumentException("팀 아이디가 존재하지 않습니다."));
 
-        return new TeamResponse(
-                team.getId(),
-                team.getName(),
-                team.getDescription(),
-                team.getCreatedAt(),
-                team.getUpdatedAt()
+        return new CommonResponse<>(
+                true,
+                "팀 조회 성공",
+                TeamResponse.from(team),
+                LocalDateTime.now()
         );
 
     }
 
     @Transactional
-    public TeamResponse updateTeam(Long teamId, TeamRequest request) {
+    public CommonResponse<TeamResponse> updateTeam(Long teamId, TeamRequest request) {
         Team team = teamRepository.findById(teamId).orElseThrow(
                 () -> new IllegalArgumentException("팀 아이디가 존재하지 않습니다."));
 
@@ -86,21 +91,22 @@ public class TeamService {
             throw new IllegalArgumentException("팀 설명이 같습니다");
         }
 
-        team.update(request.getName(), request.getDescription());
+        team.setName(request.getName());
+        team.setDescription(request.getDescription());
 
-        return new TeamResponse(
-                team.getId(),
-                team.getName(),
-                team.getDescription(),
-                team.getCreatedAt(),
-                team.getUpdatedAt()
+        Team updatedTeam = teamRepository.save(team);
+
+        return new CommonResponse<>(
+                true,
+                "팀 수정 성공",
+                TeamResponse.from(updatedTeam),
+                LocalDateTime.now()
         );
     }
 
     @Transactional
     public void deleteTeam(Long teamId) {
-        teamRepository.DeleteByTeamId(teamId);
+        teamRepository.deleteByTeamId(teamId);
     }
-
 
 }
