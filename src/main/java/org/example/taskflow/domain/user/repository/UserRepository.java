@@ -2,6 +2,7 @@ package org.example.taskflow.domain.user.repository;
 
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
+import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -28,4 +29,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
     List<User> findAllByDeletedAtIsNull();
+
+    List<User> findByTeam(Team team);
+
+    Optional<User> findByIdAndTeam(Long id, Team team);
 }

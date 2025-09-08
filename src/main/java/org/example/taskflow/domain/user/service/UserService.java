@@ -59,4 +59,22 @@ public class UserService {
 
         return userRepository.getByUsernameWithoutDeletedAtOrThrow(username);
     }
+
+    // 4.9 추가 가능한 사용자 목록 조회
+    public List<UserResponse> getInsertTeamUsers(Long teamId) {
+        List<User> users = userRepository.findAllByDeletedAtIsNull();
+
+        List<User> members = users.stream().filter(user -> user.getTeam().getId().equals(teamId)).toList();
+
+        return members.stream().map(UserResponse::from).toList();
+    }
+
+    // 4.9 추가 가능한 사용자 목록 조회
+    public List<UserResponse> getInsertTeamUsers() {
+        List<User> users = userRepository.findAllByDeletedAtIsNull();
+
+        List<User> members = users.stream().filter(user -> user.getTeam() == null).toList();
+
+        return members.stream().map(UserResponse::from).toList();
+    }
 }
