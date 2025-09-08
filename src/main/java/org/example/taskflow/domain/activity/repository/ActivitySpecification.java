@@ -32,9 +32,6 @@ public class ActivitySpecification {
     }
 
     /**
-     * ✅ [추가] 특정 작업 ID로 필터링하는 조건을 생성합니다.
-     * 이 메소드가 없어서 ActivityService에서 오류가 발생했습니다.
-     *
      * @param taskId 필터링할 작업의 ID
      * @return Specification 객체
      */
