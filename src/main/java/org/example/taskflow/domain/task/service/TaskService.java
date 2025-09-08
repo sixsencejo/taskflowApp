@@ -1,12 +1,11 @@
 package org.example.taskflow.domain.task.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
-import org.example.taskflow.common.utils.SecurityUtil;
 import org.example.taskflow.domain.task.dto.*;
 import org.example.taskflow.domain.task.entity.Task;
-import org.example.taskflow.domain.task.enums.Category;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.task.repository.TaskRepository;
 import org.example.taskflow.domain.user.entity.User;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -29,18 +29,17 @@ public class TaskService {
 
     // Task 생성
     public TaskResponse createTask(TaskCreateRequest taskCreateRequest) {
-        String username = SecurityUtil.getCurrentUsername();
-        User assignee = userRepository.findByUsername(username).orElseThrow(
+        User assignee = userRepository.findById(taskCreateRequest.assigneeId()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
-
+        log.info("assignee={}", assignee);
         Task task = taskRepository.save(
                 Task.builder()
                         .title(taskCreateRequest.title())
                         .description(taskCreateRequest.description())
                         .dueDate(taskCreateRequest.dueDate())
                         .priority(taskCreateRequest.priority())
-                        .category(Category.TASK_CREATED)
+                        .category(taskCreateRequest.category())
                         .assignee(assignee)
                         .build()
         );
@@ -225,6 +224,7 @@ public class TaskService {
                 task.getDueDate(),
                 task.getPriority(),
                 task.getStatus(),
+                task.getCategory(),
                 assigneeResponse.id(),
                 assigneeResponse,
                 task.getCreatedAt(),
@@ -246,6 +246,7 @@ public class TaskService {
                             task.getDueDate(),
                             task.getPriority(),
                             task.getStatus(),
+                            task.getCategory(),
                             assigneeResponse.id(),
                             assigneeResponse,
                             task.getCreatedAt(),
