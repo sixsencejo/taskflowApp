@@ -1,7 +1,7 @@
 package org.example.taskflow.domain.comment.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.taskflow.common.dto.CommonResponse;
+import org.example.taskflow.common.dto.Response;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.comment.dto.*;
 import org.example.taskflow.domain.comment.enums.ResponseCode;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tasks/{taskId}/comments")
-@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -19,7 +18,7 @@ public class CommentController {
     private final UserService userService;
 
     @PostMapping
-    public CommonResponse<CommentResponse> createComment(
+    public Response<CommentResponse> createComment(
             @PathVariable Long taskId,
             @RequestBody CommentCreateRequest commentCreateRequest
     ) {
@@ -29,7 +28,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public CommonResponse<CommentPageResponse<CommentGetAllResponse>> getComments(
+    public Response<CommentPageResponse<CommentGetAllResponse>> getComments(
             @PathVariable Long taskId,
             @RequestParam(defaultValue = "newest") String sort,
             @RequestParam(defaultValue = "0") int page,
@@ -41,7 +40,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public CommonResponse<CommentResponse> updateComment(
+    public Response<CommentResponse> updateComment(
             @PathVariable Long taskId,
             @PathVariable Long commentId,
             @RequestBody CommentUpdateRequest commentUpdateRequest
@@ -52,7 +51,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public CommonResponse<Void> deleteComment(
+    public Response<Void> deleteComment(
             @PathVariable Long taskId,
             @PathVariable Long commentId
     ) {

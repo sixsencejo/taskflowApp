@@ -1,7 +1,7 @@
 package org.example.taskflow.domain.activity.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.taskflow.common.dto.CommonResponse;
+import org.example.taskflow.common.dto.Response;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.activity.dto.ActivityPageResponse;
 import org.example.taskflow.domain.activity.dto.ActivityResponse;
@@ -15,14 +15,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
 
 @RestController
 @RequestMapping("/activities")
-@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class ActivityController {
 
@@ -30,7 +32,7 @@ public class ActivityController {
     private final DashboardService dashboardService;
 
     @GetMapping
-    public CommonResponse<ActivityPageResponse<ActivityResponse>> getActivities(
+    public Response<ActivityPageResponse<ActivityResponse>> getActivities(
             @RequestParam(name = "type", required = false) String typeCode,
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) Long taskId,
@@ -44,11 +46,11 @@ public class ActivityController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<CommonResponse<PageResponse<ActivityDto>>> getActivities(@PageableDefault(page = 0, size = 10)Pageable pageable) {
+    public ResponseEntity<Response<PageResponse<ActivityDto>>> getActivities(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         PageResponse<ActivityDto> activityDtoPageResponse = dashboardService.getActivities(pageable);
 
         return ResponseEntity.ok(
-                ResponseUtil.success(activityDtoPageResponse,"활동 내역 조회 완료")
+                ResponseUtil.success(activityDtoPageResponse, "활동 내역 조회 완료")
         );
     }
 
