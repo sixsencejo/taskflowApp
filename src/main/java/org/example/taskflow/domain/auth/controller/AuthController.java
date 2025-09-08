@@ -9,13 +9,11 @@ import org.example.taskflow.domain.auth.enums.ResponseCode;
 import org.example.taskflow.domain.auth.service.AuthService;
 import org.example.taskflow.domain.user.dto.UserResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class AuthController {
 

@@ -15,16 +15,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
 
 @RestController
 @RequestMapping("/activities")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class ActivityController {
 
@@ -46,11 +44,11 @@ public class ActivityController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<CommonResponse<PageResponse<ActivityDto>>> getActivities(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+    public ResponseEntity<CommonResponse<PageResponse<ActivityDto>>> getActivities(@PageableDefault(page = 0, size = 10)Pageable pageable) {
         PageResponse<ActivityDto> activityDtoPageResponse = dashboardService.getActivities(pageable);
 
         return ResponseEntity.ok(
-                ResponseUtil.success(activityDtoPageResponse, "활동 내역 조회 완료")
+                ResponseUtil.success(activityDtoPageResponse,"활동 내역 조회 완료")
         );
     }
 
