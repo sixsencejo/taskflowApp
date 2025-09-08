@@ -14,10 +14,9 @@ public interface DashboardServiceImpl {
     /**
      * 사용자 작업 목록 조화
      *
-     * @param username
      * @return 사용자 작업 정보
      */
-    MyTasksResponse getMyTasks(String username);
+    MyTasksResponse getMyTasks();
 
     /**
      * 팀별 진행률 조회

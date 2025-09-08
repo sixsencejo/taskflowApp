@@ -2,6 +2,7 @@ package org.example.taskflow.domain.dashboard.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.dashboard.repository.TasksRepository;
+import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +43,30 @@ public class TasksService implements TaskServiceImpl {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
         return tasksRepository.countTodayTasksByAssigneeId(assigneeId,startOfDay,endOfDay);
+    }
+
+    @Override
+    public List<Task> findTasksByTeamId(Long teamId) {
+        return tasksRepository.findTasksByAssigneeTeamId(teamId);
+    }
+
+    @Override
+    public List<Task> findTodayTasksByAssigneeId(Long assigneeId, LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return tasksRepository.findTodayTasksByAssigneeId(assigneeId, startOfDay, endOfDay);
+    }
+
+    @Override
+    public List<Task> findUpcomingTasksByAssigneeId(Long assigneeId, LocalDate date) {
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        return tasksRepository.findUpcomingTasksByAssigneeId(assigneeId, currentTime);
+    }
+
+    @Override
+    public List<Task> findOverdueTasksByAssigneeId(Long assigneeId, LocalDate date) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        return tasksRepository.findOverdueTasksByAssigneeId(assigneeId, currentTime);
     }
 }
