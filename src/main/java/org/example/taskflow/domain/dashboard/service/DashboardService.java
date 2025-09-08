@@ -1,16 +1,20 @@
 package org.example.taskflow.domain.dashboard.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.taskflow.domain.dashboard.dto.*;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.user.service.UserService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+@Service
+@RequiredArgsConstructor
 public class DashboardService implements DashboardServiceImpl {
 
-    private TasksService tasksService;
-    private UserService userService;
+    private final TasksService tasksService;
+    private final UserService userService;
 
     @Override
     public DashboardStatsResponse getDashboardStats() {
