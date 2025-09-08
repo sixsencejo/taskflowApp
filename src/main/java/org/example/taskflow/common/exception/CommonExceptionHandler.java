@@ -1,7 +1,7 @@
 package org.example.taskflow.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.taskflow.common.dto.CommonResponse;
+import org.example.taskflow.common.dto.Response;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,17 +14,17 @@ public class CommonExceptionHandler {
 
     // 커스텀 예외 처리
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<CommonResponse<Object>> handleCustomException(CustomException e) {
-        CommonResponse<Object> commonResponse = ResponseUtil.fail(e.getMessage());
-        log.error("handleCustomException={}", commonResponse);
+    public ResponseEntity<Response<Object>> handleCustomException(CustomException e) {
+        Response<Object> response = ResponseUtil.fail(e.getMessage());
+        log.error("handleCustomException={}", response);
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
-                .body(commonResponse);
+                .body(response);
     }
 
     // Valid 예외 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CommonResponse<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<Response<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         CustomException customException = new CustomException(ErrorCode.INVALID_REQUEST_PARAMETER, message);
         log.warn("handleMethodArgumentNotValidException={}", customException);
@@ -33,7 +33,7 @@ public class CommonExceptionHandler {
 
     // 일반 예외 처리
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonResponse<Object>> handleException(Exception e) {
+    public ResponseEntity<Response<Object>> handleException(Exception e) {
 
         log.error("Unhandled server exception occurred", e);
 

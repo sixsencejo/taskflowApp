@@ -2,7 +2,7 @@ package org.example.taskflow.domain.task.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.taskflow.common.dto.CommonResponse;
+import org.example.taskflow.common.dto.Response;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.auth.jwt.JwtTokenProvider;
 import org.example.taskflow.domain.task.dto.*;
@@ -23,7 +23,7 @@ public class TaskController {
     private final UserService userService;
 
     @PostMapping
-    public CommonResponse<TaskResponse> createTask(
+    public Response<TaskResponse> createTask(
             @Valid @RequestBody TaskCreateRequest taskCreateRequest) {
         TaskResponse taskResponse = taskService.createTask(taskCreateRequest);
 
@@ -31,7 +31,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public CommonResponse<TaskPageResponse<TaskResponse>> findAllTasks(
+    public Response<TaskPageResponse<TaskResponse>> findAllTasks(
             @RequestParam(required = false) Status status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -57,7 +57,7 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-    public CommonResponse<TaskResponse> getTask(
+    public Response<TaskResponse> getTask(
             @PathVariable Long taskId
     ) {
         TaskResponse taskResponse = taskService.getTask(taskId);
@@ -65,7 +65,7 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}")
-    public CommonResponse<TaskResponse> updateTask(
+    public Response<TaskResponse> updateTask(
             @PathVariable Long taskId,
             @Valid @RequestBody TaskUpdateAllRequest taskUpdateAllRequest
     ) {
@@ -74,7 +74,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{taskId}/status")
-    public CommonResponse<TaskResponse> updateStatus(
+    public Response<TaskResponse> updateStatus(
             @PathVariable Long taskId,
             @RequestBody TaskUpdateStatusRequest taskUpdateStatusRequest
     ) {
@@ -84,7 +84,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public CommonResponse<Void> deleteTask(
+    public Response<Void> deleteTask(
             @PathVariable Long taskId
     ) {
         return ResponseUtil.success(taskService.deleteTask(taskId), ResponseCode.TASK_DELETED_RESPONSE.getMessage());

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.taskflow.common.dto.CommonResponse;
+import org.example.taskflow.common.dto.Response;
 import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.springframework.security.core.AuthenticationException;
@@ -29,7 +29,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        CommonResponse<Void> errorResponse = ResponseUtil.fail(ErrorCode.AUTHENTICATION_REQUIRED.getMessage());
+        Response<Void> errorResponse = ResponseUtil.fail(ErrorCode.AUTHENTICATION_REQUIRED.getMessage());
 
         response.getWriter().write(mapper.writeValueAsString(errorResponse));
     }
