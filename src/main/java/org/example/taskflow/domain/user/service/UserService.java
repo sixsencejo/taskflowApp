@@ -56,6 +56,7 @@ public class UserService {
                 .toList();
     }
 
+    // 현재 로그인 된 유저 엔티티 반환 2025-09-08 작성 이동재
     @Transactional(readOnly = true)
     public User getCurrentUserEntity() {
         String username = SecurityUtil.getCurrentUsername();
@@ -63,6 +64,7 @@ public class UserService {
         return userRepository.getByUsernameWithoutDeletedAtOrThrow(username);
     }
 
+    //유저 통합 검색 서비스 기능 2025-09-09 작성 이동재
     @Transactional(readOnly = true)
     public List<UserSearchDto> searchUsersForIntegratedSearch(String query, int limit) {
         List<User> users = userRepository.findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseAndDeletedAtIsNull(

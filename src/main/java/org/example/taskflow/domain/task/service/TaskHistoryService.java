@@ -1,8 +1,8 @@
-package org.example.taskflow.domain.dashboard.service;
+package org.example.taskflow.domain.task.service;
 
 import java.time.LocalDate;
 
-public interface TaskHistoryServiceImpl {
+public interface TaskHistoryService { // 작업 기록 조회 2025-09-08 작성 이동재
     /**
      *
      * @param assigneeId

@@ -32,6 +32,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByDeletedAtIsNull();
 
+
+    // 유저 통합 검색을 위해 대소문자 구분 없이 추출 2025-09-09 수정 이동재
     @Query("SELECT u FROM User u WHERE " +
             "(LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%')) OR " +
             "LOWER(u.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +

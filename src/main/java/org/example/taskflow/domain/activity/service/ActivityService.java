@@ -23,6 +23,10 @@ public class ActivityService {
 
     private final ActivityRepository activityRepository;
 
+    public Page<Activity> findUserActivities(Long userId, Pageable pageable) {
+        // 사용자별 활동 조회
+        return activityRepository.findUserActivities(userId, pageable);
+    }
     public Page<ActivityResponse> getActivities(
             String typeCode, Long userId, Long taskId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         Specification<Activity> spec = buildSpecification(typeCode, userId, taskId, startDate, endDate);
@@ -54,6 +58,8 @@ public class ActivityService {
         }
         return spec.stream().reduce(Specification::and).orElse(null);
     }
+
+
 
 }
 

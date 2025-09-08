@@ -1,7 +1,6 @@
 package org.example.taskflow.domain.search.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.taskflow.domain.dashboard.service.TasksService;
 import org.example.taskflow.domain.dashboard.service.TeamsService;
 import org.example.taskflow.domain.search.dto.SearchResponse;
 import org.example.taskflow.domain.search.dto.TaskSearchDto;
@@ -9,6 +8,7 @@ import org.example.taskflow.domain.search.dto.TeamSearchDto;
 import org.example.taskflow.domain.search.dto.UserSearchDto;
 import org.example.taskflow.domain.task.dto.TaskPageResponse;
 import org.example.taskflow.domain.task.dto.TaskResponse;
+import org.example.taskflow.domain.task.service.TaskService;
 import org.example.taskflow.domain.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SearchServiceImpl implements SearchService {
-    private final TasksService taskService;
+    private final TaskService taskService;
     private final UserService userService;
     private final TeamsService teamService;
 

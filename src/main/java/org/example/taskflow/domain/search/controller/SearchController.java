@@ -1,7 +1,7 @@
 package org.example.taskflow.domain.search.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.taskflow.common.dto.CommonResponse;
+import org.example.taskflow.common.dto.Response;
 import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.search.dto.SearchResponse;
 import org.example.taskflow.domain.search.service.SearchServiceImpl;
@@ -19,7 +19,7 @@ public class SearchController {
      * 통합 검색
      */
     @GetMapping
-    public CommonResponse<SearchResponse> search(
+    public Response<SearchResponse> search(
             @RequestParam(required = false) String q) {
 
         if (q == null || q.trim().isEmpty()) {

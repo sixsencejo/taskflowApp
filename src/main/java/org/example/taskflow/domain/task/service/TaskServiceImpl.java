@@ -1,4 +1,4 @@
-package org.example.taskflow.domain.dashboard.service;
+package org.example.taskflow.domain.task.service;
 
 import org.example.taskflow.domain.search.dto.TaskSearchDto;
 import org.example.taskflow.domain.task.dto.TaskPageResponse;
@@ -9,7 +9,7 @@ import org.example.taskflow.domain.task.enums.Status;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface TaskServiceImpl {
+public interface TaskServiceImpl { // 2025-09-09 수정 이동재
 
     /**
      * 특정 사용자에게 할당된 전체 작업 수 조회

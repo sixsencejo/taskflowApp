@@ -91,8 +91,9 @@ public class TaskController {
         return ResponseUtil.success(taskService.deleteTask(taskId), ResponseCode.TASK_DELETED_RESPONSE.getMessage());
     }
 
+    // 태스크 통합 검색 기능 2025-09-09 수정 이동재
     @GetMapping("/search")
-    public CommonResponse<TaskPageResponse<TaskResponse>> searchTasks(
+    public Response<TaskPageResponse<TaskResponse>> searchTasks(
             @RequestParam(required = false) String q,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

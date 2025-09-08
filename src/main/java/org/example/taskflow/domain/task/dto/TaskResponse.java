@@ -21,7 +21,7 @@ public record TaskResponse(
         LocalDateTime updatedAt
 )
 {
-    public static TaskResponse from(Task task) {
+    public static TaskResponse from(Task task) { // 정적 팩토리 메서드 2025-09-09 작성 이동재
         return new TaskResponse(
                 task.getId(),
                 task.getTitle(),
