@@ -76,21 +76,21 @@ public class CommentService {
         Comparator<Comment> comparator = Comparator.comparing(Comment::getCreatedAt).reversed();
         // createdAt 기준 오름차순 sort
         if ("oldest".equalsIgnoreCase(sort)) {
-            comparator = comparator.reversed(); // oldest 요청 시 오래된 순
+            comparator = comparator.reversed();
         }
 
         List<Comment> parents = comments.stream()
                 .filter(c -> c.getParent() == null)
-                .sorted(comparator) // 부모 정렬
+                .sorted(comparator)
                 .toList();
 
         Map<Long, List<Comment>> childMap = comments.stream()
                 .filter(c -> c.getParent() != null)
                 .collect(Collectors.groupingBy(c -> c.getParent().getId()));
 
-        List<CommentGetAllResponse> flatList = new ArrayList<>();
+        List<CommentGetAllResponse> parentChildList = new ArrayList<>();
         for (Comment parent : parents) {
-            flatList.add(
+            parentChildList.add(
                     new CommentParentResponse(
                             parent.getId(),
                             parent.getContent(),
@@ -103,11 +103,11 @@ public class CommentService {
             );
 
             List<Comment> children = childMap.getOrDefault(parent.getId(), List.of()).stream()
-                    .sorted(comparator) // 자식 정렬
+                    .sorted(comparator)
                     .toList();
 
             for (Comment child : children) {
-                flatList.add(
+                parentChildList.add(
                         new CommentResponse(
                                 child.getId(),
                                 child.getContent(),
@@ -123,13 +123,13 @@ public class CommentService {
         }
 
         int start = page * size;
-        int end = Math.min(start + size, flatList.size());
-        List<CommentGetAllResponse> pageContent = start > end ? List.of() : flatList.subList(start, end);
+        int end = Math.min(start + size, parentChildList.size());
+        List<CommentGetAllResponse> commentsResponse = start > end ? List.of() : parentChildList.subList(start, end);
 
         return new CommentPageResponse<>(
-                pageContent,
-                (long) flatList.size(),
-                (int) Math.ceil((double) flatList.size() / size),
+                commentsResponse,
+                (long) parentChildList.size(),
+                (int) Math.ceil((double) parentChildList.size() / size),
                 size,
                 page
         );
