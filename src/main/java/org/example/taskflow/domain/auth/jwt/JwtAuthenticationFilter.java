@@ -41,11 +41,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (AuthenticationException e) {
-            // 예외를 잡은 후 AuthenticationEntryPoint가 처리하도록
-            throw e;
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"success\":false,\"message\":\"인증에 실패했습니다.\"}");
+            return;
         } catch (Exception e) {
             logger.error("필터 처리 중 예기치 않은 오류 발생", e);
-            throw new RuntimeException("Unexpected error", e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"success\":false,\"message\":\"서버 오류 발생\"}");
+            return;
         }
 
         filterChain.doFilter(request, response);
