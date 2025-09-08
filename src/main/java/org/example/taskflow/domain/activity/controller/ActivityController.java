@@ -6,10 +6,14 @@ import org.example.taskflow.common.utils.ResponseUtil;
 import org.example.taskflow.domain.activity.dto.ActivityPageResponse;
 import org.example.taskflow.domain.activity.dto.ActivityResponse;
 import org.example.taskflow.domain.activity.service.ActivityService;
+import org.example.taskflow.domain.dashboard.dto.ActivityDto;
+import org.example.taskflow.domain.dashboard.dto.PageResponse;
+import org.example.taskflow.domain.dashboard.service.DashboardService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,6 +26,7 @@ import java.time.LocalDate;
 public class ActivityController {
 
     private final ActivityService activityService;
+    private final DashboardService dashboardService;
 
     @GetMapping
     public CommonResponse<ActivityPageResponse<ActivityResponse>> getActivities(
@@ -35,6 +40,15 @@ public class ActivityController {
         Page<ActivityResponse> activityPage = activityService.getActivities(
                 typeCode, userId, taskId, startDate, endDate, pageable);
         return ResponseUtil.success(new ActivityPageResponse<>(activityPage), "활동 로그를 조회했습니다.");
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<CommonResponse<PageResponse<ActivityDto>>> getActivities(@PageableDefault(page = 0, size = 10)Pageable pageable) {
+        PageResponse<ActivityDto> activityDtoPageResponse = dashboardService.getActivities(pageable);
+
+        return ResponseEntity.ok(
+                ResponseUtil.success(activityDtoPageResponse,"활동 내역 조회 완료")
+        );
     }
 
 }

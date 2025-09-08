@@ -1,11 +1,14 @@
 package org.example.taskflow.domain.dashboard.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.taskflow.domain.activity.entity.Activity;
+import org.example.taskflow.domain.dashboard.conveter.ActivityDtoConverter;
 import org.example.taskflow.domain.dashboard.dto.*;
 import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.user.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ public class DashboardService implements DashboardServiceImpl {
     private final TasksService tasksService;
     private final UserService userService;
     private final TeamsService teamsService;
+    private final ActivitiesService activitiesService;
+    private final ActivityDtoConverter activityDtoConverter;
 
     @Override
     public DashboardStatsResponse getDashboardStats() {
@@ -86,10 +91,15 @@ public class DashboardService implements DashboardServiceImpl {
     }
 
     @Override
-    public PageResponse<ActivityDto> getActivityDto(String username, Pageable pageable) {
-        return null;
-    }
+    public PageResponse<ActivityDto> getActivities(Pageable pageable) {
 
+        Long userId = userService.getUserId();
+        Page<Activity> activities = activitiesService.findUserActivities(userId, pageable);
+
+        Page<ActivityDto> activityDtos = activities.map(activityDtoConverter::convertToActivityDto);
+
+        return PageResponse.of(activityDtos);
+    }
 
     private List<TaskSummaryDto> convertToTaskSummaryList(List<Task> tasks) {
         return tasks.stream()

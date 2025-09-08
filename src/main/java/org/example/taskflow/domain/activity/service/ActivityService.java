@@ -54,5 +54,6 @@ public class ActivityService {
         }
         return spec.stream().reduce(Specification::and).orElse(null);
     }
+
 }
 

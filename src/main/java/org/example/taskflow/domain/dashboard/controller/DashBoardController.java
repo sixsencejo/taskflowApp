@@ -49,5 +49,6 @@ public class DashBoardController {
                 ResponseUtil.success(teamProgressMap,"팀 진행률 조회")
         );
     }
+
 }
 

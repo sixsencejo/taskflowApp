@@ -47,6 +47,8 @@ public class Activity extends SoftDeletableEntity {
     @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;
 
+
+
     @Builder
     public Activity(User user, ActivityType activityType, Task task, String description) {
         this.user = user;
