@@ -52,4 +52,11 @@ public class UserService {
                 ))
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public User getCurrentUserEntity() {
+        String username = SecurityUtil.getCurrentUsername();
+
+        return userRepository.getByUsernameWithoutDeletedAtOrThrow(username);
+    }
 }

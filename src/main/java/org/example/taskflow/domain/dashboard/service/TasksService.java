@@ -19,7 +19,6 @@ public class TasksService implements TaskServiceImpl {
 
     private final TasksRepository tasksRepository;
 
-
     @Override
     public int countByAssigneeId(Long assigneeId) {
         return tasksRepository.countByAssigneeId(assigneeId);
