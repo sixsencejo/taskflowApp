@@ -94,16 +94,16 @@ public class TaskController {
     // 태스크 통합 검색 기능 2025-09-09 수정 이동재
     @GetMapping("/search")
     public Response<TaskPageResponse<TaskResponse>> searchTasks(
-            @RequestParam(required = false) String q,
+            @RequestParam("query") String query,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        if (q == null || q.trim().isEmpty()) {
+        if (query == null || query.trim().isEmpty()) {
             return ResponseUtil.fail("검색어를 입력해주세요.");
 
         }
 
-        TaskPageResponse<TaskResponse> taskResponses = searchServiceImpl.searchTasks(q, page, size);
+        TaskPageResponse<TaskResponse> taskResponses = searchServiceImpl.searchTasks(query, page, size);
         return ResponseUtil.success(taskResponses, "작업 검색 완료");
     }
 }

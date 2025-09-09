@@ -16,7 +16,7 @@ public class TaskSearchDto {
     private String title;
     private String description;
     private String status;
-    private UserDto user;
+    private UserDto assignee;
 
     public static TaskSearchDto from(Task task) {
         return TaskSearchDto.builder()
@@ -24,7 +24,7 @@ public class TaskSearchDto {
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .status(task.getStatus().toString())
-                .user(UserDto.from(task.getAssignee()))
+                .assignee(task.getAssignee() != null ? UserDto.from(task.getAssignee()) : null)
                 .build();
     }
 }

@@ -20,13 +20,13 @@ public class SearchController {
      */
     @GetMapping
     public Response<SearchResponse> search(
-            @RequestParam(required = false) String q) {
+            @RequestParam("query") String query) {
 
-        if (q == null || q.trim().isEmpty()) {
+        if (query == null || query.trim().isEmpty()) {
             return ResponseUtil.fail("검색어를 입력해주세요.");
         }
 
-        SearchResponse searchResult = searchServiceImpl.search(q);
+        SearchResponse searchResult = searchServiceImpl.search(query);
         return ResponseUtil.success(searchResult, "검색 완료");
     }
 }
