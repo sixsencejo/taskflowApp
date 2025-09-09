@@ -5,6 +5,8 @@ import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.common.utils.SecurityUtil;
 import org.example.taskflow.domain.search.dto.UserSearchDto;
+import org.example.taskflow.domain.team.entity.Team;
+import org.example.taskflow.domain.team.repository.TeamRepository;
 import org.example.taskflow.domain.user.dto.UserInfoForTaskResponse;
 import org.example.taskflow.domain.user.dto.UserResponse;
 import org.example.taskflow.domain.user.entity.User;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     @Transactional(readOnly = true)
     public UserResponse getCurrentUser() {
@@ -62,6 +66,27 @@ public class UserService {
         String username = SecurityUtil.getCurrentUsername();
 
         return userRepository.getByUsernameWithoutDeletedAtOrThrow(username);
+    }
+
+    // 4.9 추가 가능한 사용자 목록 조회
+    public List<UserResponse> getInsertTeamUsers(Long teamId) {
+        List<User> users = userRepository.findAllByDeletedAtIsNull();
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+
+        users = users.stream()
+                .filter(user -> !Objects.equals(user.getTeam(), team))
+                .toList();
+
+        return users.stream().map(UserResponse::from).toList();
+    }
+
+    // 4.9 추가 가능한 사용자 목록 조회
+    public List<UserResponse> getInsertTeamUsers() {
+        List<User> users = userRepository.findAllByDeletedAtIsNull();
+
+        users = users.stream().filter(user -> user.getTeam() == null).toList();
+
+        return users.stream().map(UserResponse::from).toList();
     }
 
     //유저 통합 검색 서비스 기능 2025-09-09 작성 이동재

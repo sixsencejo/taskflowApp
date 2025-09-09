@@ -9,6 +9,7 @@ import org.example.taskflow.domain.user.enums.ResponseCode;
 import org.example.taskflow.domain.user.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,5 +29,18 @@ public class UserController {
     @GetMapping
     public Response<List<UserInfoForTaskResponse>> getUsers() {
         return ResponseUtil.success(userService.getUsers(), ResponseCode.USER_FOR_TASK_RESPONSE.getMessage());
+    }
+
+    @GetMapping("/available")
+    public Response<List<UserResponse>> getInsertTeamUsers(
+            @RequestParam(required = false) Long teamId
+    ) {
+        List<UserResponse> userResponses;
+        if (teamId == null) {
+            userResponses = userService.getInsertTeamUsers();
+        } else {
+            userResponses = userService.getInsertTeamUsers(teamId);
+        }
+        return ResponseUtil.success(userResponses, ResponseCode.USER_FOR_TEAM_RESPONSE.getMessage());
     }
 }

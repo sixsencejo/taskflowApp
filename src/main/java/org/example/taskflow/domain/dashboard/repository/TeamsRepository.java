@@ -10,11 +10,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TeamsRepository extends JpaRepository<Team,Long> {
+public interface TeamsRepository extends JpaRepository<Team, Long> {
     @Query("SELECT t FROM Team t WHERE " +
-            "LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')) " +
-            "AND t.deletedAt IS NULL")
-    List<Team> findByNameContainingIgnoreCaseAndDeletedAtIsNull(
+            "LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')) ")
+    List<Team> findByNameContainingIgnoreCase(
             @Param("name") String name,
             Pageable pageable);
 }

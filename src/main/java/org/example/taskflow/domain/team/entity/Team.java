@@ -1,29 +1,34 @@
 package org.example.taskflow.domain.team.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.taskflow.common.entity.BaseEntity;
-import org.example.taskflow.domain.user.entity.User;
+import org.example.taskflow.domain.team.dto.TeamRequest;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "team")
+@Table(name = "teams")
 public class Team extends BaseEntity {
 
-    @Column(length = 10)
+    @Column(length = 50)
     private String name;
 
     @Column(length = 100)
-    private String explain;
+    private String description;
 
     @Builder
-    public Team(String name, String explain) {
+    public Team(String name, String description) {
         this.name = name;
-        this.explain = explain;
+        this.description = description;
     }
 
+    public void updateTeamInfo(TeamRequest teamRequest) {
+        this.name = teamRequest.name();
+        this.description = teamRequest.description();
+    }
 }

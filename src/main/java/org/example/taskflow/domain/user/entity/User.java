@@ -46,4 +46,12 @@ public class User extends SoftDeletableEntity {
         this.name = name;
         this.role = role;
     }
+
+    public void updateTeam(Team team) {
+        this.team = team;
+    }
+
+    public void deleteTeam() {
+        this.team = null;
+    }
 }
