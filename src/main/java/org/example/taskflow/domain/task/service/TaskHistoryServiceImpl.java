@@ -22,7 +22,7 @@ public class TaskHistoryServiceImpl implements TaskHistoryService { // 작업 �
 
     @Override
     public int countNewTasksByAssigneeIdAndDate(Long assigneeId, LocalDate date) {
-        return taskHistoryRepository.countNewTasksByUserIdAndDate(assigneeId, date);
+        return taskHistoryRepository.countNewTasksByAssigneeIdAndDate(assigneeId, date);
     }
 
     @Override
