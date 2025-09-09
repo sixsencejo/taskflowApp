@@ -78,15 +78,23 @@ public class TeamService {
 
     // 4.5 팀 정보 수정
     public TeamResponse updateTeam(Long teamId, TeamRequest teamRequest) {
-        if (teamRepository.existsByName(teamRequest.name())) {
-            throw new CustomException(ErrorCode.TEAM_NAME_ALREADY_EXISTS, ErrorCode.TEAM_NAME_ALREADY_EXISTS.getMessage());
-        }
-        
         Team team = teamRepository.findById(teamId).orElseThrow(
                 () -> new CustomException(ErrorCode.TASK_NOT_FOUND, ErrorCode.TASK_NOT_FOUND.getMessage())
         );
 
-        team.updateTeamInfo(teamRequest);
+        if (!team.getName().equals(teamRequest.name())) {
+            if (teamRepository.existsByName(teamRequest.name())) {
+                throw new CustomException(ErrorCode.TEAM_NAME_ALREADY_EXISTS, ErrorCode.TEAM_NAME_ALREADY_EXISTS.getMessage());
+            }
+            team.updateTeamName(teamRequest.name());
+        } else if (!team.getDescription().equals(teamRequest.description())) {
+            team.updateTeamDescription(teamRequest.description());
+        } else {
+            if (teamRepository.existsByName(teamRequest.name())) {
+                throw new CustomException(ErrorCode.TEAM_NAME_ALREADY_EXISTS, ErrorCode.TEAM_NAME_ALREADY_EXISTS.getMessage());
+            }
+            team.updateTeamInfo(teamRequest);
+        }
 
         List<User> members = userRepository.findByTeam(team);
 
