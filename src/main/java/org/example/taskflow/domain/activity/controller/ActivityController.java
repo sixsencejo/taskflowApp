@@ -8,7 +8,7 @@ import org.example.taskflow.domain.activity.dto.ActivityResponse;
 import org.example.taskflow.domain.activity.service.ActivityService;
 import org.example.taskflow.domain.dashboard.dto.ActivityDto;
 import org.example.taskflow.domain.dashboard.dto.PageResponse;
-import org.example.taskflow.domain.dashboard.service.DashboardService;
+import org.example.taskflow.domain.dashboard.service.DashboardServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,7 +29,7 @@ import java.time.LocalDate;
 public class ActivityController {
 
     private final ActivityService activityService;
-    private final DashboardService dashboardService;
+    private final DashboardServiceImpl dashboardServiceImpl;
 
     @GetMapping
     public Response<ActivityPageResponse<ActivityResponse>> getActivities(
@@ -47,7 +47,7 @@ public class ActivityController {
 
     @GetMapping("/my")
     public ResponseEntity<Response<PageResponse<ActivityDto>>> getActivities(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        PageResponse<ActivityDto> activityDtoPageResponse = dashboardService.getActivities(pageable);
+        PageResponse<ActivityDto> activityDtoPageResponse = dashboardServiceImpl.getActivities(pageable);
 
         return ResponseEntity.ok(
                 ResponseUtil.success(activityDtoPageResponse, "활동 내역 조회 완료")
