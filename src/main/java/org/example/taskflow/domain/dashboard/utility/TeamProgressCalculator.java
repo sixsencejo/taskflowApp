@@ -1,11 +1,11 @@
 package org.example.taskflow.domain.dashboard.utility;
 
 import lombok.experimental.UtilityClass;
-import org.example.taskflow.domain.dashboard.service.TeamsService;
 import org.example.taskflow.domain.task.entity.Task;
 import org.example.taskflow.domain.task.enums.Status;
 import org.example.taskflow.domain.task.service.TaskService;
 import org.example.taskflow.domain.team.entity.Team;
+import org.example.taskflow.domain.team.service.TeamService;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class TeamProgressCalculator {
         return (int) ((completedCount * 100) / tasks.size());
     }
 
-    public static Map<String, Integer> calculateForAllTeams(TeamsService teamsService, TaskService taskService) {
+    public static Map<String, Integer> calculateForAllTeams(TeamService teamsService, TaskService taskService) {
         return teamsService.findAll().stream()
                 .collect(Collectors.toMap(
                         Team::getName,

@@ -7,7 +7,7 @@ import org.example.taskflow.domain.dashboard.dto.DashboardStatsResponse;
 import org.example.taskflow.domain.dashboard.dto.MyTasksResponse;
 import org.example.taskflow.domain.dashboard.dto.WeeklyTrendResponse;
 import org.example.taskflow.domain.dashboard.enums.ResponseMessage;
-import org.example.taskflow.domain.dashboard.service.DashboardService;
+import org.example.taskflow.domain.dashboard.service.DashboardServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +21,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DashBoardController {
 
-    private final DashboardService dashboardService;
+    private final DashboardServiceImpl dashboardServiceImpl;
 
     @GetMapping("/stats")
     public ResponseEntity<Response<DashboardStatsResponse>> getDashboardStats() {
-        DashboardStatsResponse statsResponse = dashboardService.getDashboardStats();
+        DashboardStatsResponse statsResponse = dashboardServiceImpl.getDashboardStats();
         return ResponseEntity.ok(
                 ResponseUtil.success(statsResponse, ResponseMessage.STATS_SUCCESS.getMessage())
         );
@@ -36,7 +36,7 @@ public class DashBoardController {
      */
     @GetMapping("/my-tasks")
     public ResponseEntity<Response<MyTasksResponse>> getMyTasks() {
-        MyTasksResponse myTasksResponse = dashboardService.getMyTasks();
+        MyTasksResponse myTasksResponse = dashboardServiceImpl.getMyTasks();
         return ResponseEntity.ok(
                 ResponseUtil.success(myTasksResponse, ResponseMessage.MY_TASKS_SUCCESS.getMessage())
         );
@@ -44,7 +44,7 @@ public class DashBoardController {
 
     @GetMapping("team-progress")
     public ResponseEntity<Response<Map<String, Integer>>> getTeamProgress() {
-        Map<String, Integer> teamProgressMap = dashboardService.getTeamProgress();
+        Map<String, Integer> teamProgressMap = dashboardServiceImpl.getTeamProgress();
 
         return ResponseEntity.ok(
                 ResponseUtil.success(teamProgressMap, ResponseMessage.TEAM_PROGRESS_SUCCESS.getMessage())
@@ -53,7 +53,7 @@ public class DashBoardController {
 
     @GetMapping("/weekly-trend")
     public ResponseEntity<Response<List<WeeklyTrendResponse>>> getWeeklyTrend() {
-        List<WeeklyTrendResponse> weeklyTrend = dashboardService.getWeeklyTrendResponse();
+        List<WeeklyTrendResponse> weeklyTrend = dashboardServiceImpl.getWeeklyTrendResponse();
 
         return ResponseEntity.ok(
                 ResponseUtil.success(weeklyTrend, ResponseMessage.WEEKLY_TREND_SUCCESS.getMessage())

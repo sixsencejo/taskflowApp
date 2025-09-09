@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.domain.comment.enums.ResponseCode;
+import org.example.taskflow.domain.search.dto.TeamSearchDto;
 import org.example.taskflow.domain.team.dto.TeamDeleteResponse;
 import org.example.taskflow.domain.team.dto.TeamMemberInsertRequest;
 import org.example.taskflow.domain.team.dto.TeamRequest;
@@ -12,6 +13,7 @@ import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.team.repository.TeamRepository;
 import org.example.taskflow.domain.user.entity.User;
 import org.example.taskflow.domain.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,5 +149,19 @@ public class TeamService {
         List<User> members = userRepository.findByTeam(team);
 
         return new TeamResponse(team, members);
+    }
+
+    public List<Team> findAll() {
+        return teamRepository.findAll();
+    }
+
+    public List<TeamSearchDto> searchTeamsForIntegratedSearch(String query, int limit) {
+        List<Team> teams = teamRepository.findByNameContainingIgnoreCase(
+                query, PageRequest.of(0, limit)
+        );
+
+        return teams.stream()
+                .map(TeamSearchDto::from)
+                .collect(Collectors.toList());
     }
 }
