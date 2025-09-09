@@ -59,5 +59,19 @@ public class ActivitySpecification {
             );
         };
     }
+
+    public static Specification<Activity> isDueDateOnOrAfter(LocalDate startDate) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Activity, Task> taskJoin = root.join("task");
+            return criteriaBuilder.greaterThanOrEqualTo(taskJoin.get("dueDate"), startDate.atStartOfDay());
+        };
+    }
+
+    public static Specification<Activity> isDueDateOnOrBefore(LocalDate endDate) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Activity, Task> taskJoin = root.join("task");
+            return criteriaBuilder.lessThan(taskJoin.get("dueDate"), endDate.plusDays(1).atStartOfDay());
+        };
+    }
 }
 
