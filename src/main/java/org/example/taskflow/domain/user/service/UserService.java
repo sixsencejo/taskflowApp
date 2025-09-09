@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskflow.common.exception.CustomException;
 import org.example.taskflow.common.exception.ErrorCode;
 import org.example.taskflow.common.utils.SecurityUtil;
+import org.example.taskflow.domain.search.dto.UserSearchDto;
 import org.example.taskflow.domain.team.entity.Team;
 import org.example.taskflow.domain.team.repository.TeamRepository;
-import org.example.taskflow.domain.search.dto.UserSearchDto;
 import org.example.taskflow.domain.user.dto.UserInfoForTaskResponse;
 import org.example.taskflow.domain.user.dto.UserResponse;
 import org.example.taskflow.domain.user.entity.User;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
