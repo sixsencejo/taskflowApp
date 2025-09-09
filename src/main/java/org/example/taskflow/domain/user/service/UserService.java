@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,12 +69,8 @@ public class UserService {
 
     // 4.9 추가 가능한 사용자 목록 조회
     public List<UserResponse> getInsertTeamUsers(Long teamId) {
-        List<User> users = userRepository.findAllByDeletedAtIsNull();
+        List<User> users = userRepository.findAllByDeletedAtIsNullAndTeamIsNull();
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
-
-        users = users.stream()
-                .filter(user -> !Objects.equals(user.getTeam(), team))
-                .toList();
 
         return users.stream().map(UserResponse::from).toList();
     }

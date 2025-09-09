@@ -31,4 +31,12 @@ public class Team extends BaseEntity {
         this.name = teamRequest.name();
         this.description = teamRequest.description();
     }
+
+    public void updateTeamName(String name) {
+        this.name = name;
+    }
+
+    public void updateTeamDescription(String description) {
+        this.description = description;
+    }
 }
