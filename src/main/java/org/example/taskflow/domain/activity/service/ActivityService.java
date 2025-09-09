@@ -27,6 +27,7 @@ public class ActivityService {
         // 사용자별 활동 조회
         return activityRepository.findUserActivities(userId, pageable);
     }
+
     public Page<ActivityResponse> getActivities(
             String typeCode, Long userId, Long taskId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         Specification<Activity> spec = buildSpecification(typeCode, userId, taskId, startDate, endDate);
@@ -55,10 +56,13 @@ public class ActivityService {
         }
         if (startDate != null && endDate != null) {
             spec.add(ActivitySpecification.isBetweenDates(startDate, endDate));
+        } else if (startDate != null) {
+            spec.add(ActivitySpecification.isDueDateOnOrAfter(startDate));
+        } else if (endDate != null) {
+            spec.add(ActivitySpecification.isDueDateOnOrBefore(endDate));
         }
         return spec.stream().reduce(Specification::and).orElse(null);
     }
-
 
 
 }
