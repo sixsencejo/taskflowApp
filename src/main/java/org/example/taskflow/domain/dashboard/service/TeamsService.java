@@ -22,7 +22,7 @@ public class TeamsService {
     }
 
     public List<TeamSearchDto> searchTeamsForIntegratedSearch(String query, int limit) {
-        List<Team> teams = teamRepository.findByNameContainingIgnoreCaseAndDeletedAtIsNull(
+        List<Team> teams = teamRepository.findByNameContainingIgnoreCase(
                 query, PageRequest.of(0, limit)
         );
 
