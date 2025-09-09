@@ -47,4 +47,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("username") String username,
             @Param("name") String name,
             Pageable pageable);
+
+    List<User> findAllByDeletedAtIsNullAndTeamIsNull();
 }
